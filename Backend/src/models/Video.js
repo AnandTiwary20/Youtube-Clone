@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
   title: {
@@ -65,4 +65,4 @@ const videoSchema = new mongoose.Schema({
 // Add a text index for search functionality
 videoSchema.index({ title: 'text', description: 'text', tags: 'text' });
 
-module.exports = mongoose.model('Video', videoSchema);
+export default mongoose.model('Video', videoSchema);

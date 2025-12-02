@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const channelSchema = new mongoose.Schema({
   name: {
@@ -44,4 +44,4 @@ const channelSchema = new mongoose.Schema({
 // Add a text index for search functionality
 channelSchema.index({ name: 'text', description: 'text' });
 
-module.exports = mongoose.model('Channel', channelSchema);
+export default mongoose.model('Channel', channelSchema);

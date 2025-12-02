@@ -1,17 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
-const Channel = require('../models/Channel');
-const User = require('../models/User');
+import express from 'express';
+import { check, validationResult } from 'express-validator';
+import { authenticate, isAdmin, isOwner } from '../middleware/auth.js';
+import Channel from '../models/Channel.js';
+import User from '../models/User.js';
 
-// @route   POST api/channels
-// @desc    Create or update a channel
-// @access  Private
+const router = express.Router();
+
 router.post(
   '/',
   [
-    auth.authenticate,
+    authenticate,
     [
       check('name', 'Channel name is required').not().isEmpty(),
       check('description', 'Description is required').not().isEmpty()
@@ -57,10 +55,8 @@ router.post(
   }
 );
 
-// @route   GET api/channels/me
-// @desc    Get current user's channel
-// @access  Private
-router.get('/me', auth.authenticate, async (req, res) => {
+
+router.get('/me', authenticate, async (req, res) => {
   try {
     const channel = await Channel.findOne({ owner: req.user.id })
       .populate('owner', ['username', 'profilePicture'])
@@ -103,7 +99,7 @@ router.get('/:id', async (req, res) => {
 // @route   PUT api/channels/subscribe/:channelId
 // @desc    Subscribe/Unsubscribe to a channel
 // @access  Private
-router.put('/subscribe/:channelId', auth.authenticate, async (req, res) => {
+router.put('/subscribe/:channelId', authenticate, async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
     if (!channel) {
@@ -167,4 +163,4 @@ router.get('/search', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

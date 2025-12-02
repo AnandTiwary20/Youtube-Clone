@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 // Middleware to verify JWT token
-exports.authenticate = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   try {
     // Get token from header
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -32,7 +32,7 @@ exports.authenticate = async (req, res, next) => {
 };
 
 // Middleware to check if user is admin
-exports.isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   if (req.user && req.user.role === 'admin') {
     next();
   } else {
@@ -41,7 +41,7 @@ exports.isAdmin = (req, res, next) => {
 };
 
 // Middleware to check if user is the owner of the resource
-exports.isOwner = (model) => async (req, res, next) => {
+export const isOwner = (model) => async (req, res, next) => {
   try {
     const resource = await model.findById(req.params.id);
     

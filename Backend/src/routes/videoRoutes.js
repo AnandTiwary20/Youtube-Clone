@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { check, validationResult } from 'express-validator';
+import { authenticate } from '../middleware/auth.js';
+import Video from '../models/Video.js';
+import Channel from '../models/Channel.js';
+
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
-const Video = require('../models/Video');
-const Channel = require('../models/Channel');
 
 // @route   POST api/videos
 // @desc    Upload a video
@@ -11,7 +12,7 @@ const Channel = require('../models/Channel');
 router.post(
   '/',
   [
-    auth.authenticate,
+    authenticate,
     [
       check('title', 'Title is required').not().isEmpty(),
       check('description', 'Description is required').not().isEmpty(),
@@ -137,7 +138,7 @@ router.get('/:id', async (req, res) => {
 // @route   PUT api/videos/like/:id
 // @desc    Like or unlike a video
 // @access  Private
-router.put('/like/:id', auth.authenticate, async (req, res) => {
+router.put('/like/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
     if (!video) {
@@ -174,7 +175,7 @@ router.put('/like/:id', auth.authenticate, async (req, res) => {
 // @route   PUT api/videos/dislike/:id
 // @desc    Dislike or undislike a video
 // @access  Private
-router.put('/dislike/:id', auth.authenticate, async (req, res) => {
+router.put('/dislike/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
     if (!video) {
@@ -269,4 +270,4 @@ router.get('/search', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
