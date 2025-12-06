@@ -6,9 +6,6 @@ import Channel from '../models/Channel.js';
 
 const router = express.Router();
 
-// @route   POST api/videos
-// @desc    Upload a video
-// @access  Private
 router.post(
   '/',
   [
@@ -29,7 +26,7 @@ router.post(
 
     try {
       // Get channel of the current user
-      const channel = await Channel.findOne({ owner: req.user.id });
+      const channel = await Channel.findOne({ owner: req.user.userId });
       if (!channel) {
         return res.status(400).json({ message: 'You need to create a channel first' });
       }
@@ -73,9 +70,7 @@ router.post(
   }
 );
 
-// @route   GET api/videos
-// @desc    Get all public videos with pagination
-// @access  Public
+
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -102,9 +97,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route   GET api/videos/:id
-// @desc    Get video by ID
-// @access  Public
 router.get('/:id', async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
@@ -135,9 +127,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// @route   PUT api/videos/like/:id
-// @desc    Like or unlike a video
-// @access  Private
+
 router.put('/like/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -146,12 +136,12 @@ router.put('/like/:id', authenticate, async (req, res) => {
     }
 
     // Check if the video has already been liked
-    const likeIndex = video.likes.indexOf(req.user.id);
-    const dislikeIndex = video.dislikes.indexOf(req.user.id);
+    const likeIndex = video.likes.indexOf(req.user.userId);
+    const dislikeIndex = video.dislikes.indexOf(req.user.userId);
 
     if (likeIndex === -1) {
       // Add like
-      video.likes.unshift(req.user.id);
+      video.likes.unshift(req.user.userId);
       
       // Remove from dislikes if present
       if (dislikeIndex !== -1) {
@@ -172,9 +162,7 @@ router.put('/like/:id', authenticate, async (req, res) => {
   }
 });
 
-// @route   PUT api/videos/dislike/:id
-// @desc    Dislike or undislike a video
-// @access  Private
+
 router.put('/dislike/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -183,12 +171,12 @@ router.put('/dislike/:id', authenticate, async (req, res) => {
     }
 
     // Check if the video has already been disliked
-    const dislikeIndex = video.dislikes.indexOf(req.user.id);
-    const likeIndex = video.likes.indexOf(req.user.id);
+    const dislikeIndex = video.dislikes.indexOf(req.user.userId);
+    const likeIndex = video.likes.indexOf(req.user.userId);
 
     if (dislikeIndex === -1) {
       // Add dislike
-      video.dislikes.unshift(req.user.id);
+      video.dislikes.unshift(req.user.userId);
       
       // Remove from likes if present
       if (likeIndex !== -1) {
@@ -209,9 +197,6 @@ router.put('/dislike/:id', authenticate, async (req, res) => {
   }
 });
 
-// @route   GET api/videos/channel/:channelId
-// @desc    Get all videos by channel
-// @access  Public
 router.get('/channel/:channelId', async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
@@ -230,9 +215,7 @@ router.get('/channel/:channelId', async (req, res) => {
   }
 });
 
-// @route   GET api/videos/search?q=query
-// @desc    Search videos
-// @access  Public
+
 router.get('/search', async (req, res) => {
   try {
     const query = req.query.q;

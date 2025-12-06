@@ -25,7 +25,7 @@ router.post(
 
     try {
       // Check if channel already exists for the user
-      let channel = await Channel.findOne({ owner: req.user.id });
+      let channel = await Channel.findOne({ owner: req.user.userId });
 
       if (channel) {
         // Update existing channel
@@ -41,7 +41,7 @@ router.post(
       channel = new Channel({
         name,
         description,
-        owner: req.user.id,
+        owner: req.user.userId,
         avatar: avatar || '',
         banner: banner || ''
       });
@@ -58,7 +58,7 @@ router.post(
 
 router.get('/me', authenticate, async (req, res) => {
   try {
-    const channel = await Channel.findOne({ owner: req.user.id })
+    const channel = await Channel.findOne({ owner: req.user.userId })
       .populate('owner', ['username', 'profilePicture'])
       .populate('videos');
 
@@ -73,9 +73,7 @@ router.get('/me', authenticate, async (req, res) => {
   }
 });
 
-// @route   GET api/channels/:id
-// @desc    Get channel by ID
-// @access  Public
+
 router.get('/:id', async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.id)
@@ -96,9 +94,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// @route   PUT api/channels/subscribe/:channelId
-// @desc    Subscribe/Unsubscribe to a channel
-// @access  Private
+
 router.put('/subscribe/:channelId', authenticate, async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
@@ -107,29 +103,29 @@ router.put('/subscribe/:channelId', authenticate, async (req, res) => {
     }
 
     // Check if the user is the channel owner
-    if (channel.owner.toString() === req.user.id) {
+    if (channel.owner.toString() === req.user.userId) {
       return res.status(400).json({ message: 'Cannot subscribe to your own channel' });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
     const isSubscribed = user.subscribedChannels.includes(channel._id);
 
     if (isSubscribed) {
       // Unsubscribe
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.user.userId, {
         $pull: { subscribedChannels: channel._id }
       });
       await Channel.findByIdAndUpdate(channel._id, {
-        $pull: { subscribers: req.user.id }
+        $pull: { subscribers: req.user.userId }
       });
       res.json({ message: 'Unsubscribed successfully' });
     } else {
       // Subscribe
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.user.userId, {
         $addToSet: { subscribedChannels: channel._id }
       });
       await Channel.findByIdAndUpdate(channel._id, {
-        $addToSet: { subscribers: req.user.id }
+        $addToSet: { subscribers: req.user.userId }
       });
       res.json({ message: 'Subscribed successfully' });
     }

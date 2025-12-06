@@ -1,63 +1,46 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-// Middleware to verify JWT token
+// AUTH MIDDLEWARE
 export const authenticate = async (req, res, next) => {
   try {
-    // Get token from header
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
-    }
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) return res.status(401).json({ message: "No token provided" });
 
-    // Verify token
     const decoded = jwt.verify(token, JWT_SECRET);
+
     
-    // Add user from payload
-    const user = await User.findById(decoded.user.id).select('-password');
-    
-    if (!user) {
-      return res.status(401).json({ message: 'Token is not valid' });
-    }
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) return res.status(401).json({ message: "Invalid token" });
 
     req.user = user;
     next();
   } catch (err) {
-    console.error('Authentication error:', err);
-    res.status(401).json({ message: 'Token is not valid' });
+    console.error("Auth Error:", err);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
-// Middleware to check if user is admin
+// Optional admin middleware 
 export const isAdmin = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    res.status(403).json({ message: 'Admin access required' });
-  }
+  if (req.user?.role === "admin") next();
+  else res.status(403).json({ message: "Admin access required" });
 };
 
-// Middleware to check if user is the owner of the resource
-export const isOwner = (model) => async (req, res, next) => {
+// Universal ownership check 
+export const isOwner = (model, ownerField) => async (req, res, next) => {
   try {
     const resource = await model.findById(req.params.id);
-    
-    if (!resource) {
-      return res.status(404).json({ message: 'Resource not found' });
-    }
+    if (!resource) return res.status(404).json({ message: "Resource not found" });
 
-    // Check if the user is the owner of the resource
-    if (resource.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Not authorized to access this resource' });
-    }
+    if (resource[ownerField].toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "Not authorized" });
 
     req.resource = resource;
     next();
-  } catch (error) {
-    console.error('Ownership check error:', error);
-    res.status(500).json({ message: 'Server error during ownership verification' });
+  } catch (err) {
+    res.status(500).json({ message: "Ownership verification error" });
   }
 };
