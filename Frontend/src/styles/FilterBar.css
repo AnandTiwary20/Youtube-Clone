@@ -1,0 +1,60 @@
+/* Filter Bar Container */
+.filter-bar {
+    position: fixed;
+    top: 70px;
+    left: 250px; /* Adjust if sidebar collapsible later */
+    right: 0;
+    height: 55px;
+    background: #0f0f0f;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 1px solid #222;
+    z-index: 20;
+
+    scrollbar-width: none;   /* Firefox */
+}
+
+/* Hide scrollbar for Chrome */
+.filter-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Buttons */
+.filter-bar button {
+    background: #272727;
+    border: none;
+    outline: none;
+    padding: 8px 18px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    white-space: nowrap;
+}
+
+/* Hover effect */
+.filter-bar button:hover {
+    background: #3c3c3c;
+    transform: scale(1.05);
+}
+
+/* Active (selected) button */
+.filter-bar button.active {
+    background: #fff;
+    color: #000;
+    font-weight: 600;
+    transform: scale(1.08);
+    box-shadow: 0px 0px 10px rgba(255,255,255,0.3);
+}
+
+/* Responsive when sidebar collapses later */
+@media(max-width: 900px){
+    .filter-bar {
+        left: 0;
+    }
+}

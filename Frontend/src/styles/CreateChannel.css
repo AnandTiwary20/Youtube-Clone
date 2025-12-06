@@ -1,0 +1,114 @@
+.create-channel-page {
+  min-height: calc(100vh - 56px); /* below navbar */
+  padding: 32px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #0f0f0f;
+  color: #f1f1f1;
+}
+
+.create-channel-card {
+  width: 100%;
+  max-width: 640px;
+  background-color: #181818;
+  border-radius: 16px;
+  padding: 24px 28px 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid #272727;
+}
+
+.create-channel-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.create-channel-subtitle {
+  font-size: 14px;
+  color: #aaaaaa;
+  margin-bottom: 20px;
+}
+
+.create-channel-error {
+  background-color: #3a0d0d;
+  color: #ffb3b3;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.create-channel-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.create-channel-form label {
+  font-size: 13px;
+  color: #cccccc;
+  margin-bottom: 6px;
+}
+
+.create-channel-form input,
+.create-channel-form textarea {
+  background-color: #121212;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+}
+
+.create-channel-form input::placeholder,
+.create-channel-form textarea::placeholder {
+  color: #666666;
+}
+
+.create-channel-form input:focus,
+.create-channel-form textarea:focus {
+  border-color: #3ea6ff;
+  box-shadow: 0 0 0 1px rgba(62, 166, 255, 0.4);
+}
+
+.primary-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #3ea6ff;
+  color: #0f0f0f;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: #65b8ff;
+  transform: translateY(-1px);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary-btn:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .create-channel-page {
+    padding: 20px 16px;
+  }
+  .create-channel-card {
+    padding: 20px 18px 24px;
+  }
+}

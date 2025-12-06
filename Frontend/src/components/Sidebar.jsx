@@ -4,31 +4,30 @@ import "../styles/Sidebar.css";
 export default function Sidebar() {
   return (
     <aside className="sidebar">
-      <div className="section">
-        <Link to="/">🏠 Home</Link>
-        <Link to="/subscriptions">📺 Subscriptions</Link>
-        <Link to="/shorts">🎬 Shorts</Link>
+      
+      <div className="sidebar-section">
+        <Link className="sidebar-item" to="/">🏠 Home</Link>
+        <Link className="sidebar-item" to="/subscriptions">📺 Subscriptions</Link>
+        <Link className="sidebar-item" to="/shorts">🎬 Shorts</Link>
       </div>
 
-      <hr />
-
-      <div className="section">
-        <h4>Subscriptions</h4>
-        <Link>8bit Binks69</Link>
-        <Link>Animal Planet</Link>
-        <Link>BBC Earth</Link>
-        <Link>ABP News</Link>
-        <Link>Show more</Link>
+      <h4 className="sidebar-title">Subscriptions</h4>
+      <div className="sidebar-section">
+        <Link className="sidebar-item">8bit Binks69</Link>
+        <Link className="sidebar-item">Animal Planet</Link>
+        <Link className="sidebar-item">BBC Earth</Link>
+        <Link className="sidebar-item">ABP News</Link>
+        <Link className="sidebar-item">Show more</Link>
       </div>
 
-      <hr />
-
-      <div className="section">
-        <h4>You</h4>
-        <Link to="/library">📚 Library</Link>
-        <Link to="/history">⏳ History</Link>
-        <Link>👍 Liked</Link>
+      <h4 className="sidebar-title">You</h4>
+      <div className="sidebar-section">
+        <Link className="sidebar-item" to="/library">📁 Library</Link>
+        <Link className="sidebar-item" to="/history">⌛ History</Link>
+        <Link className="sidebar-item" to="/liked">👍 Liked</Link>
+        <Link to="/create-channel">  ➕ Create Channel </Link>
       </div>
+
     </aside>
   );
 }

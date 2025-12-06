@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import CreateChannel from "./pages/CreateChannel.jsx";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VideoPlayer from "./pages/VideoPlayer";
 import ChannelPage from "./pages/ChannelPage";
 import Upload from "./pages/Upload";
-import "./styles/Layout.css";   // global layout file
+import "./styles/Layout.css";  
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/create-channel" element={<CreateChannel />} />
             <Route path="/video/:id" element={<VideoPlayer />} />
             <Route path="/channel/:id" element={<ChannelPage />} />
             <Route path="/upload" element={<Upload />} />

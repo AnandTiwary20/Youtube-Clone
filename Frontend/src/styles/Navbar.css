@@ -1,109 +1,84 @@
-/* ---- NAVBAR ---- */
 
-header.navbar {
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar {
+  height: 60px;
+  background: #0f0f0f !important;
+  color: white;
+  border-bottom: 1px solid #272727;
   display: flex;
   align-items: center;
+  padding: 0 24px;
   justify-content: space-between;
-  padding: 12px 24px;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
 /* Logo */
-.navbar .logo {
-  font-size: 26px;
+.logo {
+  font-size: 22px;
   font-weight: bold;
-  color: #cc0000;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  color: #fff;
+  text-decoration: none;
 }
-
-.navbar .logo span {
-  color: #000;
-  font-weight: 600;
-}
+.logo span { color: #ff3b30; }
 
 /* Search Bar */
 .search-area {
   display: flex;
-  align-items: center;
-  flex: 0.5;
+  width: 40%;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #121212;
+  border: 1px solid #333;
+  transition: 0.3s;
 }
+.search-area:hover { border-color: #555; }
 
 .search-area input {
-  width: 100%;
-  padding: 8px 14px;
-  border: 1px solid #bbb;
-  border-right: none;
-  border-radius: 20px 0 0 20px;
+  flex: 1;
+  padding: 10px 15px;
+  background: transparent;
+  border: none;
   outline: none;
+  color: white;
 }
-
-.search-area input:focus {
-  border-color: #e60000;
-}
-
 .search-area button {
-  padding: 8px 18px;
-  border: 1px solid #bbb;
-  background: #eee;
-  border-radius: 0 20px 20px 0;
+  width: 55px;
+  background: #272727;
+  border: none;
+  color: #ccc;
   cursor: pointer;
+  transition: 0.2s;
 }
+.search-area button:hover { background: #3d3d3d; }
 
-/* Right side */
+/* Right */
 .right-section {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.right-section a,
-.right-section button {
+  gap: 18px;
   font-size: 14px;
-  font-weight: 500;
+}
+
+.sign-btn,.signup-btn,.logout-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
   text-decoration: none;
-}
-
-.sign-btn {
-  background: transparent;
-  color: #333;
-}
-
-.signup-btn {
-  background: #cc0000;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 6px;
-}
-
-.signup-btn:hover {
-  background: #a50000;
-}
-
-.logout-btn {
-  background: #cc0000;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 6px;
-}
-
-.logout-btn:hover {
-  background: #a50000;
-}
-.upload-btn-nav {
-  background: #e3e3e3;
-  padding: 6px 12px;
-  border-radius: 6px;
-  margin-right: 10px;
   font-weight: 500;
-}
-.upload-btn-nav:hover {
-  background: #ccc;
+  transition: 0.3s;
 }
 
+.sign-btn { color:white;border:1px solid #555; }
+.sign-btn:hover { background:#222; }
+
+.signup-btn,.logout-btn {
+  background:#ff3b30;
+  color:white;
+}
+.signup-btn:hover,.logout-btn:hover { background:#d72b23; }
