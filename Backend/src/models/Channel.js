@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const channelSchema = new mongoose.Schema({
-  name: {
+  channelName: {
     type: String,
     required: true,
     trim: true
@@ -19,7 +19,7 @@ const channelSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  banner: {
+  channelBanner: {
     type: String,
     default: ''
   },
@@ -35,13 +35,10 @@ const channelSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+ }, { timestamps: true });
+
 
 // Add a text index for search functionality
-channelSchema.index({ name: 'text', description: 'text' });
+channelSchema.index({ channelName: 'text', description: 'text' });
 
 export default mongoose.model('Channel', channelSchema);

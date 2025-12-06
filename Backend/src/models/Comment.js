@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(
   {
-    content: {
+    text: {
       type: String,
       required: true,
       trim: true,
