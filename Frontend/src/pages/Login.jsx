@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from "../utils/axiosInstance";          
+import { useDispatch } from "react-redux";        
+import { loginSuccess } from "../store/authSlice"; 
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +10,7 @@ const Login = () => {
     password: '',
   });
   const navigate = useNavigate();
+   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -14,12 +18,23 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
+//Async function for handle submit
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login logic here
-    console.log('Login form submitted:', formData);
-  };
+  try {
+    // Call backend login API
+    const res = await API.post("/auth/login", formData);
+    dispatch(loginSuccess(res.data));
+
+    alert("Login successful");
+    navigate("/"); // Go to homepage
+  } catch (err) {
+    alert(err.response?.data?.message || "Invalid email or password");
+  }
+};
+
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

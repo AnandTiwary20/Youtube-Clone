@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from "../utils/axiosInstance";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -17,11 +20,32 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your registration logic here
-    console.log('Registration form submitted:', formData);
+
+    if(formData.password !== formData.confirmPassword){
+      alert("Passwords do not match");
+      return;
+    }
+
+    try{
+      const res = await API.post("/auth/register", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      dispatch(loginSuccess(res.data));  
+      alert("Registration Successful");
+      navigate("/"); 
+
+    }catch(err){
+      alert(err.response?.data?.message || "Registration Failed");
+    }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

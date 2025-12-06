@@ -26,10 +26,7 @@ router.post(
       // check email OR username duplicate
       let existingUser = await User.findOne({ $or: [{ email }, { username }] });
       if (existingUser) return res.status(400).json({ message: "User already exists" });
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const newUser = await User.create({ username, email, password: hashedPassword });
+const newUser = await User.create({ username, email, password });
 
       const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "7d" });
 
@@ -62,7 +59,8 @@ router.post(
       const user = await User.findOne({ email });
       if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
-      const isMatch = await bcrypt.compare(password, user.password);
+     const isMatch = await user.comparePassword(password);
+
       if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
       const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });

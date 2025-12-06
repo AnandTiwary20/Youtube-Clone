@@ -1,24 +1,18 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/youtube-clone';
-const PORT = process.env.PORT || 5000;
+export const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/youtube-clone";
 
-export {
-  MONGODB_URI,
-  PORT
-};
+export const PORT = process.env.PORT || 5000;
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected");
+    await mongoose.connect(MONGODB_URI);
+    console.log("MongoDB connected successfully");
   } catch (err) {
-    console.error("MongoDB connection error:", err.message);
+    console.error("Mongo connection failed:", err.message);
     process.exit(1);
   }
 };
