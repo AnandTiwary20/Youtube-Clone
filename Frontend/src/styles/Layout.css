@@ -1,10 +1,26 @@
-.layout {
+
+
+.app-container {
   display: flex;
+  background-color: #0f0f0f;
+  color: white;
 }
 
-.content {
-  margin-left: 220px;
-  padding: 30px;
-  background: #f9f9f9;
-  min-height: calc(100vh - 60px);
+/* Main content (video grid, channel, upload pages etc) */
+.main-content {
+  margin-left: 240px;        /* space for sidebar */
+  margin-top: 60px;          /* space for navbar */
+  width: calc(100% - 240px);
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #0f0f0f;
+  color: white;
+}
+
+/* For responsive layout */
+@media(max-width: 768px){
+  .main-content{
+    margin-left: 70px;
+    width: calc(100% - 70px);
+  }
 }

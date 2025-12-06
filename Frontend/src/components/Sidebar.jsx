@@ -1,17 +1,34 @@
-import "../styles/Sidebar.css";
-
 import { Link } from "react-router-dom";
+import "../styles/Sidebar.css";
 
 export default function Sidebar() {
   return (
     <aside className="sidebar">
-      <ul>
-        <li><Link to="/">🏠 Home</Link></li>
-        <li><Link to="/subscriptions">📺 Subscriptions</Link></li>
-        <li><Link to="/shorts">🎬 Shorts</Link></li>
-        <li><Link to="/library">📚 Library</Link></li>
-        <li><Link to="/history">⏳ History</Link></li>
-      </ul>
+      <div className="section">
+        <Link to="/">🏠 Home</Link>
+        <Link to="/subscriptions">📺 Subscriptions</Link>
+        <Link to="/shorts">🎬 Shorts</Link>
+      </div>
+
+      <hr />
+
+      <div className="section">
+        <h4>Subscriptions</h4>
+        <Link>8bit Binks69</Link>
+        <Link>Animal Planet</Link>
+        <Link>BBC Earth</Link>
+        <Link>ABP News</Link>
+        <Link>Show more</Link>
+      </div>
+
+      <hr />
+
+      <div className="section">
+        <h4>You</h4>
+        <Link to="/library">📚 Library</Link>
+        <Link to="/history">⏳ History</Link>
+        <Link>👍 Liked</Link>
+      </div>
     </aside>
   );
 }

@@ -7,16 +7,12 @@ import Channel from '../models/Channel.js';
 const router = express.Router();
 
 router.post(
-  '/',
+  "/upload",
   [
     authenticate,
-    [
-      check('title', 'Title is required').not().isEmpty(),
-      check('description', 'Description is required').not().isEmpty(),
-      check('videoUrl', 'Video URL is required').not().isEmpty(),
-      check('thumbnailUrl', 'Thumbnail URL is required').not().isEmpty(),
-      check('duration', 'Duration is required').isNumeric()
-    ]
+    check("title", "Title is required").not().isEmpty(),
+    check("videoUrl", "Video URL is required").not().isEmpty(),
+    check("thumbnailUrl", "Thumbnail URL is required").not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -24,11 +20,11 @@ router.post(
 
     try {
       const channel = await Channel.findOne({ owner: req.user._id });
-      if (!channel) return res.status(400).json({ message: 'You need to create a channel first' });
+      if (!channel) return res.status(400).json({ message: "Create a channel first" });
 
-      const { title, description, videoUrl, thumbnailUrl, duration, tags = [], visibility = 'public', category = 'Entertainment' } = req.body;
+      const { title, description, videoUrl, thumbnailUrl, duration, tags = [], visibility = "public", category = "Entertainment" } = req.body;
 
-      const video = new Video({
+      const video = await Video.create({
         title,
         description,
         videoUrl,
@@ -41,17 +37,17 @@ router.post(
         channel: channel._id
       });
 
-      await video.save();
-      await Channel.findByIdAndUpdate(channel._id, { $push: { videos: video._id } });
+      channel.videos.push(video._id);
+      await channel.save();
 
-      res.status(201).json(video);
-
+      res.status(201).json({ message: "Video uploaded successfully", video });
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+      console.error("Upload error:", err);
+      res.status(500).json({ message: "Server Error" });
     }
   }
 );
+
 
 // Get all videos
 router.get('/', async (req, res) => {

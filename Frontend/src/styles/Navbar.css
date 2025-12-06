@@ -96,3 +96,14 @@ header.navbar {
 .logout-btn:hover {
   background: #a50000;
 }
+.upload-btn-nav {
+  background: #e3e3e3;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-right: 10px;
+  font-weight: 500;
+}
+.upload-btn-nav:hover {
+  background: #ccc;
+}
+

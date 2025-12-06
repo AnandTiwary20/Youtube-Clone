@@ -12,7 +12,7 @@ export default function Navbar() {
     <header className="navbar">
 
       <Link to="/" className="logo">
-        ▶ YouTube <span>Clone</span>
+        ▶ YouTube <span></span>
       </Link>
 
       <div className="search-area">
@@ -25,6 +25,8 @@ export default function Navbar() {
           <>
             <span>Hi, {user?.username}</span>
             <button className="logout-btn" onClick={() => dispatch(logout())}>Logout</button>
+            <Link className="upload-btn-nav" to="/upload">Upload</Link>
+
           </>
         ) : (
           <>
