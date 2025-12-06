@@ -1,19 +1,19 @@
 import express from "express";
-import { auth } from "../middleware/auth.js";
+import { authenticate } from "../middleware/auth.js";
 import Comment from "../models/Comment.js";
 import Video from "../models/Video.js";
 
 const router = express.Router();
 
-// CREATE COMMENT
-router.post("/:videoId", auth, async (req, res) => {
+/* CREATE COMMENT */
+router.post("/:videoId", authenticate, async (req, res) => {
   try {
-    const { content } = req.body;
-    if (!content) return res.status(400).json({ error: "Comment content required" });
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: "Comment text required" });
 
     const comment = await Comment.create({
-      content,
-      user: req.user.userId,
+      text,
+      user: req.user._id,
       video: req.params.videoId,
     });
 
@@ -27,7 +27,7 @@ router.post("/:videoId", auth, async (req, res) => {
   }
 });
 
-// GET COMMENTS FOR A VIDEO
+/* GET VIDEO COMMENTS */
 router.get("/:videoId", async (req, res) => {
   try {
     const comments = await Comment.find({ video: req.params.videoId })
@@ -40,16 +40,16 @@ router.get("/:videoId", async (req, res) => {
   }
 });
 
-// UPDATE COMMENT
-router.put("/edit/:id", auth, async (req, res) => {
+/* EDIT COMMENT */
+router.put("/edit/:id", authenticate, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
 
-    if (comment.user.toString() !== req.user.userId)
+    if (comment.user.toString() !== req.user._id.toString())
       return res.status(403).json({ error: "Not authorized" });
 
-    comment.content = req.body.content;
+    comment.text = req.body.text;
     comment.isEdited = true;
     await comment.save();
 
@@ -59,16 +59,21 @@ router.put("/edit/:id", auth, async (req, res) => {
   }
 });
 
-// DELETE COMMENT
-router.delete("/:id", auth, async (req, res) => {
+/* DELETE COMMENT */
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
 
-    if (comment.user.toString() !== req.user.userId)
+    if (comment.user.toString() !== req.user._id.toString())
       return res.status(403).json({ error: "Not authorized" });
 
     await Comment.findByIdAndDelete(req.params.id);
+
+    // Remove comment reference from video
+    await Video.findByIdAndUpdate(comment.video, {
+      $pull: { comments: comment._id }
+    });
 
     res.json({ message: "Comment deleted" });
   } catch (err) {

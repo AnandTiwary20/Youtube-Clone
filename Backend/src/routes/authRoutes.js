@@ -8,7 +8,7 @@ import { authenticate as auth } from "../middleware/auth.js";
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-// REGISTER
+/* REGISTER */
 router.post(
   "/register",
   [
@@ -23,36 +23,21 @@ router.post(
     const { username, email, password } = req.body;
 
     try {
-      // check if user exists
-      let existingUser = await User.findOne({ email });
+      // check email OR username duplicate
+      let existingUser = await User.findOne({ $or: [{ email }, { username }] });
       if (existingUser) return res.status(400).json({ message: "User already exists" });
 
-      // hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // create user
-      const newUser = await User.create({
-        username,
-        email,
-        password: hashedPassword,
-      });
+      const newUser = await User.create({ username, email, password: hashedPassword });
 
-      // generate token
-      const token = jwt.sign(
-        { userId: newUser._id, email: newUser.email },
-        JWT_SECRET,
-        { expiresIn: "7d" }
-      );
+      const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "7d" });
 
       return res.status(201).json({
+        message: "Registration Successful",
         token,
-        user: {
-          id: newUser._id,
-          username: newUser.username,
-          email: newUser.email,
-        },
+        user: { id: newUser._id, username, email },
       });
-
     } catch (error) {
       console.error("Registration error:", error);
       return res.status(500).json({ message: "Server error" });
@@ -60,7 +45,7 @@ router.post(
   }
 );
 
-// LOGIN
+/* LOGIN */
 router.post(
   "/login",
   [
@@ -80,21 +65,12 @@ router.post(
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-      const token = jwt.sign(
-        { userId: user._id, email: user.email },
-        JWT_SECRET,
-        { expiresIn: "7d" }
-      );
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
       return res.json({
         token,
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-        },
+        user: { id: user._id, username: user.username, email: user.email },
       });
-
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).send("Server error");
@@ -102,11 +78,11 @@ router.post(
   }
 );
 
-// GET LOGGED IN USER
+/* GET LOGGED USER DATA */
 router.get("/user", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select("-password");
-    return res.json(user);
+    const user = await User.findById(req.user._id).select("-password");
+    res.json(user);
   } catch (error) {
     console.error("Get user error:", error);
     res.status(500).send("Server error");

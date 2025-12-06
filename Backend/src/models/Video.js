@@ -10,11 +10,11 @@ const videoSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  url: {
+  videoUrl: {
     type: String,
     required: true
   },
-  thumbnail: {
+  thumbnailUrl: {
     type: String,
     required: true
   },
@@ -26,6 +26,12 @@ const videoSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+
+  uploader: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  required: true
+},
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -54,13 +60,10 @@ const videoSchema = new mongoose.Schema({
   },
   category: {
     type: String,
+     required: true, //category is required .
     default: 'Entertainment'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  }, { timestamps: true });
 
 // Add a text index for search functionality
 videoSchema.index({ title: 'text', description: 'text', tags: 'text' });
