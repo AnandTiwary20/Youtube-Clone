@@ -13,56 +13,39 @@ router.post(
     [
       check('title', 'Title is required').not().isEmpty(),
       check('description', 'Description is required').not().isEmpty(),
-      check('url', 'Video URL is required').not().isEmpty(),
-      check('thumbnail', 'Thumbnail is required').not().isEmpty(),
+      check('videoUrl', 'Video URL is required').not().isEmpty(),
+      check('thumbnailUrl', 'Thumbnail URL is required').not().isEmpty(),
       check('duration', 'Duration is required').isNumeric()
     ]
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     try {
-      // Get channel of the current user
-      const channel = await Channel.findOne({ owner: req.user.userId });
-      if (!channel) {
-        return res.status(400).json({ message: 'You need to create a channel first' });
-      }
+      const channel = await Channel.findOne({ owner: req.user._id });
+      if (!channel) return res.status(400).json({ message: 'You need to create a channel first' });
 
-      const {
-        title,
-        description,
-        url,
-        thumbnail,
-        duration,
-        tags = [],
-        visibility = 'public',
-        category = 'Entertainment'
-      } = req.body;
+      const { title, description, videoUrl, thumbnailUrl, duration, tags = [], visibility = 'public', category = 'Entertainment' } = req.body;
 
-      // Create new video
       const video = new Video({
         title,
         description,
-        url,
-        thumbnail,
+        videoUrl,
+        thumbnailUrl,
         duration,
         tags,
         visibility,
         category,
+        uploader: req.user._id,
         channel: channel._id
       });
 
       await video.save();
-
-      // Add video to channel's videos array
-      await Channel.findByIdAndUpdate(channel._id, {
-        $push: { videos: video._id }
-      });
+      await Channel.findByIdAndUpdate(channel._id, { $push: { videos: video._id } });
 
       res.status(201).json(video);
+
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -70,7 +53,7 @@ router.post(
   }
 );
 
-
+// Get all videos
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -81,102 +64,91 @@ router.get('/', async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate('channel', ['name', 'avatar']);
+      .populate('channel', ['channelName', 'avatar']);
 
     const total = await Video.countDocuments({ visibility: 'public' });
 
-    res.json({
-      videos,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalVideos: total
-    });
+    res.json({ videos, currentPage: page, totalPages: Math.ceil(total / limit), totalVideos: total });
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
+// Filter videos by category
+router.get('/category/:type', async (req, res) => {
+  try {
+    const videos = await Video.find({ category: req.params.type, visibility: 'public' })
+      .sort({ createdAt: -1 })
+      .populate('channel', ['channelName', 'avatar']);
 
+    res.json(videos);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+
+// Single video page
 router.get('/:id', async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
-      .populate('channel')
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'user',
-          select: 'username profilePicture'
-        }
-      });
+      .populate('channel', ['channelName', 'avatar'])
+      .populate('uploader', 'username avatar')
+      .populate({ path: 'comments', populate: { path: 'user', select: 'username avatar' } });
+      
 
-    if (!video) {
-      return res.status(404).json({ message: 'Video not found' });
-    }
+    if (!video) return res.status(404).json({ message: 'Video not found' });
 
-    // Increment view count
     video.views += 1;
     await video.save();
 
     res.json(video);
+
   } catch (err) {
-    console.error(err.message);
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Video not found' });
-    }
+    console.error(err);
     res.status(500).send('Server Error');
   }
 });
 
-
+// Like Video
 router.put('/like/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
-    if (!video) {
-      return res.status(404).json({ message: 'Video not found' });
-    }
+    if (!video) return res.status(404).json({ message: 'Video not found' });
 
-    // Check if the video has already been liked
-    const likeIndex = video.likes.indexOf(req.user.userId);
-    const dislikeIndex = video.dislikes.indexOf(req.user.userId);
+    const userId = req.user._id.toString();
+    const likeIndex = video.likes.indexOf(userId);
+    const dislikeIndex = video.dislikes.indexOf(userId);
 
     if (likeIndex === -1) {
-      // Add like
-      video.likes.unshift(req.user.userId);
-      
-      // Remove from dislikes if present
-      if (dislikeIndex !== -1) {
-        video.dislikes.splice(dislikeIndex, 1);
-      }
-      
-      await video.save();
-      return res.json({ message: 'Video liked' });
+      video.likes.unshift(userId);
+      if (dislikeIndex !== -1) video.dislikes.splice(dislikeIndex, 1);
     } else {
-      // Remove like
       video.likes.splice(likeIndex, 1);
-      await video.save();
-      return res.json({ message: 'Like removed' });
     }
+
+    await video.save();
+    res.json({ message: 'Updated like status' });
+
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
 
-
+// Dislike Video
 router.put('/dislike/:id', authenticate, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
-    if (!video) {
-      return res.status(404).json({ message: 'Video not found' });
-    }
+    if (!video) return res.status(404).json({ message: 'Video not found' });
 
-    // Check if the video has already been disliked
-    const dislikeIndex = video.dislikes.indexOf(req.user.userId);
-    const likeIndex = video.likes.indexOf(req.user.userId);
+    const userId = req.user._id.toString();
+    const dislikeIndex = video.dislikes.indexOf(userId);
+    const likeIndex = video.likes.indexOf(userId);
 
     if (dislikeIndex === -1) {
       // Add dislike
-      video.dislikes.unshift(req.user.userId);
+     video.dislikes.unshift(userId);
       
       // Remove from likes if present
       if (likeIndex !== -1) {
@@ -206,7 +178,7 @@ router.get('/channel/:channelId', async (req, res) => {
 
     const videos = await Video.find({ channel: channel._id, visibility: 'public' })
       .sort({ createdAt: -1 })
-      .populate('channel', ['name', 'avatar']);
+    .populate('channel', ['channelName', 'avatar']);
 
     res.json(videos);
   } catch (err) {
@@ -234,7 +206,7 @@ router.get('/search', async (req, res) => {
       .sort({ score: { $meta: 'textScore' } })
       .skip(skip)
       .limit(limit)
-      .populate('channel', ['name', 'avatar']);
+   .populate('channel', ['channelName', 'avatar']);
 
     const total = await Video.countDocuments({ 
       $text: { $search: query }, 

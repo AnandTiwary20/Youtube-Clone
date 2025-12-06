@@ -6,6 +6,9 @@ import channelRoutes from './routes/channelRoutes.js';
 import videoRoutes from './routes/videoRoutes.js';
 import { MONGODB_URI, PORT } from './config/db.js';
 import commentRoutes from "./routes/commentRoutes.js";
+import { connectDB } from "./config/db.js";
+const PORT = process.env.PORT || 5000;
+
 
 
 
