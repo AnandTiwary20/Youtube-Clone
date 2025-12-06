@@ -1,0 +1,35 @@
+.sidebar {
+  width: 220px;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  height: calc(100vh - 60px); /* below navbar */
+  position: fixed;
+  top: 60px;
+  left: 0;
+  padding: 15px 10px;
+  overflow-y: auto;
+}
+
+.sidebar ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 12px 10px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.sidebar li:hover {
+  background: #f1f1f1;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: black;
+  display: block;
+}

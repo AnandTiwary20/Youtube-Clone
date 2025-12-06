@@ -1,18 +1,17 @@
+import "../styles/Sidebar.css";
+
 import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <aside className="w-60 h-screen bg-white border-r p-4 fixed top-16 left-0">
-      <ul className="space-y-4 font-medium">
-
-        <li><Link to="/" className="hover:text-red-600">🏠 Home</Link></li>
-        <li><Link>🔥 Trending</Link></li>
-        <li><Link>🎵 Music</Link></li>
-        <li><Link>📺 Subscriptions</Link></li>
-        <li><Link>🎬 Movies</Link></li>
-
+    <aside className="sidebar">
+      <ul>
+        <li><Link to="/">🏠 Home</Link></li>
+        <li><Link to="/subscriptions">📺 Subscriptions</Link></li>
+        <li><Link to="/shorts">🎬 Shorts</Link></li>
+        <li><Link to="/library">📚 Library</Link></li>
+        <li><Link to="/history">⏳ History</Link></li>
       </ul>
     </aside>
   );
 }
-

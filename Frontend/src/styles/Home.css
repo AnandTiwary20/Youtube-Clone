@@ -1,0 +1,59 @@
+.home-container {
+  padding: 20px 40px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Video Grid */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+/* Each Video Card */
+.video-card {
+  text-decoration: none;
+  color: black;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: .25s;
+}
+
+.thumbnail img:hover {
+  transform: scale(1.05);
+}
+
+/* Info section */
+.video-info {
+  margin-top: 8px;
+}
+
+.video-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.video-channel {
+  color: gray;
+  font-size: 14px;
+}
+
+.video-stats {
+  color: gray;
+  font-size: 13px;
+}
+
+.no-video-text {
+  color: gray;
+  font-size: 16px;
+}
