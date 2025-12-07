@@ -167,3 +167,24 @@
     padding: 10px 20px 50px;
   }
 }
+.sub-btn{
+  margin-left:auto;
+  background:#ff0000;
+  color:#fff;
+  padding:8px 18px;
+  border:none;
+  border-radius:20px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.sub-btn.active{
+  background:#dcdcdc;
+  color:#222;
+}
+
+.sub-btn:hover{
+  opacity:.85;
+}
+

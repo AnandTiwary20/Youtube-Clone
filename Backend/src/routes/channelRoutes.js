@@ -87,35 +87,39 @@ router.get("/:id", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-/* ========================= SUBSCRIBE / UNSUBSCRIBE CHANNEL ========================= */
-router.put("/subscribe/:channelId", authenticate, async (req, res) => {
+router.put('/subscribe/:channelId', authenticate, async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
-    if (!channel) return res.status(404).json({ message: "Channel not found" });
+    if (!channel) return res.status(404).json({ message: 'Channel not found' });
 
     if (channel.owner.toString() === req.user._id.toString())
-      return res.status(400).json({ message: "Cannot subscribe to yourself" });
+      return res.status(400).json({ message: "You can't subscribe to your own channel" });
 
     const user = await User.findById(req.user._id);
+    const subscribed = user.subscribedChannels.includes(channel._id);
 
-    const isSubscribed = user.subscribedChannels.includes(channel._id);
-
-    if (isSubscribed) {
-      await User.findByIdAndUpdate(req.user._id, { $pull: { subscribedChannels: channel._id } });
-      await Channel.findByIdAndUpdate(channel._id, { $pull: { subscribers: req.user._id } });
-      return res.json({ message: "Unsubscribed" });
+    if (subscribed) {
+      user.subscribedChannels.pull(channel._id);
+      channel.subscribers.pull(req.user._id);
+      await user.save();  
+      await channel.save();
+      return res.json({ message:"Unsubscribed", subscribed:false, subscribers:channel.subscribers.length });
+    } 
+    else {
+      user.subscribedChannels.push(channel._id);
+      channel.subscribers.push(req.user._id);
+      await user.save();  
+      await channel.save();
+      return res.json({ message:"Subscribed", subscribed:true, subscribers:channel.subscribers.length });
     }
-
-    await User.findByIdAndUpdate(req.user._id, { $addToSet: { subscribedChannels: channel._id } });
-    await Channel.findByIdAndUpdate(channel._id, { $addToSet: { subscribers: req.user._id } });
-
-    res.json({ message: "Subscribed" });
-
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    console.log(err);
+    res.status(500).json({ message:"Server error" });
   }
 });
+
+
+
 
 /* ========================= DELETE VIDEO BY OWNER ========================= */
 router.delete("/video/:vid", authenticate, async (req, res) => {

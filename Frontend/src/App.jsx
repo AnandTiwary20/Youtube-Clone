@@ -9,6 +9,7 @@ import VideoPlayer from "./pages/VideoPlayer";
 import ChannelPage from "./pages/ChannelPage";
 import Upload from "./pages/Upload";
 import "./styles/Layout.css";  
+import EditVideo from "./pages/EditVideo.jsx";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/video/:id" element={<VideoPlayer />} />
             <Route path="/channel/:id" element={<ChannelPage />} />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/edit-video/:id" element={<EditVideo />} />
           </Routes>
         </main>
       </div>

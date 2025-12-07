@@ -14,6 +14,7 @@ export default function ChannelPage() {
   useEffect(() => {
     fetchChannel();
     fetchVideos();
+    window.scrollTo(0,0);
   }, [id]);
 
   const fetchChannel = async () => {
@@ -29,8 +30,7 @@ export default function ChannelPage() {
     try {
       const res = await API.get(`/videos/channel/${id}`);
       setVideos(res.data || []);
-      setLoading(false);
-    } catch {
+    } finally {
       setLoading(false);
     }
   };
@@ -39,34 +39,54 @@ export default function ChannelPage() {
     if (!window.confirm("Delete this video permanently?")) return;
     try {
       await API.delete(`/videos/${videoId}`);
-      setVideos(videos.filter(v => v._id !== videoId));
+      setVideos(prev => prev.filter(v => v._id !== videoId));
     } catch {
-      alert("Couldn't delete video");
+      alert("Failed to delete video");
     }
   };
 
   if (loading) return <h2 className="loader">Loading channel...</h2>;
   if (!channel) return <h2 className="loader">Channel not found</h2>;
+  const handleSubscribe = async () => {
+  try {
+    const res = await API.put(`/channels/subscribe/${id}`);
+
+    // Update state without refresh
+ setChannel(prev => ({
+  ...prev,
+  subscribers: res.data.subscribers,  // now updates count properly
+  isSubscribed: res.data.subscribed
+}));
+
+  } catch {
+    alert("Login required to subscribe");
+  }
+};
+
 
   return (
     <div className="channel-container">
 
-      <div
-        className="channel-banner"
-        style={{ backgroundImage: `url(${channel.channelBanner})` }}
-      />
+      <div className="channel-banner" style={{ backgroundImage:`url(${channel.channelBanner})` }} />
 
+      {/* Channel Header */}
       <div className="channel-header">
         <img src={channel.avatar} alt="avatar" className="channel-avatar" />
 
         <div>
           <h1>{channel.channelName}</h1>
-          <p className="subs">{channel.subscribers} subscribers</p>
+         <p className="subs">{channel.subscribers} subscribers</p>
+
         </div>
 
-        <button className="edit-btn">
-          ⚙ Manage
-        </button>
+        <button className="manage-btn">⚙ Manage</button>
+        <button 
+  className={`sub-btn ${channel.isSubscribed ? "active" : ""}`}
+  onClick={handleSubscribe}
+>
+  {channel.isSubscribed ? "Subscribed" : "Subscribe"}
+</button>
+
       </div>
 
       <h2 className="upload-title">Your Uploads</h2>
@@ -76,7 +96,7 @@ export default function ChannelPage() {
         {videos.length > 0 ? (
           videos.map((v) => (
             <div key={v._id} className="channel-video-card">
-
+              
               <Link to={`/video/${v._id}`}>
                 <img src={v.thumbnailUrl} className="thumb" />
               </Link>
@@ -85,13 +105,10 @@ export default function ChannelPage() {
               <p className="v-date">{new Date(v.createdAt).toLocaleDateString()}</p>
 
               <div className="card-actions">
-                <button onClick={() => navigate(`/edit-video/${v._id}`)}>
-                  ✏ Edit
-                </button>
-                <button className="delete" onClick={() => deleteVideo(v._id)}>
-                  🗑 Delete
-                </button>
+                <button onClick={() => navigate(`/edit-video/${v._id}`)}>✏ Edit</button>
+                <button className="delete" onClick={() => deleteVideo(v._id)}>🗑 Delete</button>
               </div>
+
             </div>
           ))
         ) : (

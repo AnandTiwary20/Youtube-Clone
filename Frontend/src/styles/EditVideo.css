@@ -1,0 +1,42 @@
+.edit-video-page {
+  display:flex;
+  justify-content:center;
+  padding:40px;
+}
+.edit-card{
+  width:500px;
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+.edit-card h2{
+  margin-bottom:20px;
+  font-weight:700;
+}
+.edit-card input, textarea{
+  width:100%;
+  margin-bottom:12px;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  font-size:15px;
+}
+.update-btn{
+  width:100%;
+  background:#0073ff;
+  color:white;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:10px;
+}
+.delete-btn{
+  width:100%;
+  background:#ff2b2b;
+  color:white;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:10px;
+}

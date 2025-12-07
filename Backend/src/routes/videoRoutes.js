@@ -132,6 +132,30 @@ router.put('/like/:id', authenticate, async (req, res) => {
   }
 });
 
+// Update a video
+router.put('/:id', authenticate, async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) return res.status(404).json({ message: 'Video not found' });
+    if (video.uploader.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "Unauthorized" });
+
+    const allowedFields = ['title','description','thumbnailUrl','videoUrl','category','tags','visibility'];
+
+    allowedFields.forEach((field)=>{ 
+      if(req.body[field] !== undefined) video[field] = req.body[field]
+    });
+
+    await video.save();
+    res.json({ message: "Video updated successfully", video });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 // Dislike Video
 router.put('/dislike/:id', authenticate, async (req, res) => {
   try {
