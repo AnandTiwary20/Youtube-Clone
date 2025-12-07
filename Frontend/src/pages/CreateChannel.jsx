@@ -53,7 +53,7 @@ export default function CreateChannel() {
   return (
     <div className="create-channel-page">
       <div className="create-channel-card">
-        <h1 className="create-channel-title">Create your channel</h1>
+        <h1 className="create-channel-title"> <i class="bi bi-bag-plus-fill"></i> Create your channel</h1>
         <p className="create-channel-subtitle">
           Set up your channel name and details. You can change these later.
         </p>

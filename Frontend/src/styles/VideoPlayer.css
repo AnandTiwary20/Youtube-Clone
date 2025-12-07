@@ -1,0 +1,136 @@
+.video-screen {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+  padding: 20px;
+  background: #f8f9fb;
+}
+
+/* Left Video Panel */
+.video-left {
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.video-player {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.video-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+/* Stats & Buttons */
+.video-stats {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #606060;
+  font-size: 14px;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+.actions button {
+  background: #e7e7e7;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  transition: .2s;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #d4d4d4;
+}
+
+/* Channel Section */
+.channel-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 10px;
+}
+
+.channel-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.channel-info h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sub-count {
+  font-size: 12px;
+  color: #666;
+}
+
+.subscribe-btn {
+  margin-left: auto;
+  background: #ff0000;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.description {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Right Sidebar */
+.video-right {
+  padding: 15px;
+  background: #fff;
+  border-radius: 10px;
+  height: fit-content;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.rec-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.rec-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.rec-item img {
+  width: 140px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.rec-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.rec-channel {
+  font-size: 12px;
+  color: #777;
+}
