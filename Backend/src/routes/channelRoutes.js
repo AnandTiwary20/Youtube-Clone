@@ -1,137 +1,154 @@
-import express from 'express';
-import { check, validationResult } from 'express-validator';
-import { authenticate } from '../middleware/auth.js';
-import Channel from '../models/Channel.js';
-import User from '../models/User.js';
+import express from "express";
+import { check, validationResult } from "express-validator";
+import { authenticate } from "../middleware/auth.js";
+import Channel from "../models/Channel.js";
+import User from "../models/User.js";
+import Video from "../models/Video.js";
 
 const router = express.Router();
 
-// Create OR Update Channel
+/* ========================= CREATE or UPDATE CHANNEL ========================= */
 router.post(
-  '/',
+  "/",
   [
     authenticate,
     [
-      check('channelName', 'Channel name is required').not().isEmpty(),
-      check('description', 'Description is required').not().isEmpty()
-    ]
+      check("channelName", "Channel name is required").not().isEmpty(),
+      check("description", "Description is required").not().isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
 
     const { channelName, description, avatar, channelBanner } = req.body;
 
     try {
       let channel = await Channel.findOne({ owner: req.user._id });
 
-      // Update if exists
+      // UPDATE if channel exists
       if (channel) {
-        channel = await Channel.findByIdAndUpdate(
-          channel._id,
-          { $set: { channelName, description, avatar, channelBanner } },
-          { new: true }
-        );
-        return res.json(channel);
+        channel.channelName = channelName;
+        channel.description = description;
+        channel.avatar = avatar ?? channel.avatar;
+        channel.channelBanner = channelBanner ?? channel.channelBanner;
+        await channel.save();
+        return res.json({ message: "Channel Updated", channel });
       }
 
-      // Create new channel
-      const newChannel = new Channel({
+      // CREATE new
+      const newChannel = await Channel.create({
         channelName,
         description,
+        avatar,
+        channelBanner,
         owner: req.user._id,
-        avatar: avatar || '',
-        channelBanner: channelBanner || ''
       });
 
-      await newChannel.save();
-      res.status(201).json(newChannel);
+      return res.status(201).json({ message: "Channel Created", channel: newChannel });
 
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+      console.log(err);
+      return res.status(500).json({ message: "Server Error" });
     }
   }
 );
 
-// Get my channel
-router.get('/me', authenticate, async (req, res) => {
+/* ========================= GET MY CHANNEL (OWNER PANEL) ========================= */
+router.get("/me", authenticate, async (req, res) => {
   try {
     const channel = await Channel.findOne({ owner: req.user._id })
-      .populate('owner', ['username', 'avatar'])
-      .populate('videos');
+      .populate("owner", "username email avatar")
+      .populate("videos");
 
-    if (!channel) return res.status(404).json({ message: 'Channel not found' });
+    if (!channel) return res.status(404).json({ message: "No channel found" });
 
     res.json(channel);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+  } catch {
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Get channel by ID
-router.get('/:id', async (req, res) => {
+/* ========================= GET CHANNEL + VIDEOS ========================= */
+router.get("/:id", async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.id)
-      .populate('owner', ['username', 'avatar'])
-      .populate('videos');
+      .populate("owner", "username avatar email");
 
-    if (!channel) return res.status(404).json({ message: 'Channel not found' });
+    if (!channel) return res.status(404).json({ message: "Channel not found" });
 
-    res.json(channel);
+    const videos = await Video.find({ channel: channel._id })
+      .sort({ createdAt: -1 });
+
+    res.json({ channel, videos });
+
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Subscribe / Unsubscribe
-router.put('/subscribe/:channelId', authenticate, async (req, res) => {
+/* ========================= SUBSCRIBE / UNSUBSCRIBE CHANNEL ========================= */
+router.put("/subscribe/:channelId", authenticate, async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
-    if (!channel) return res.status(404).json({ message: 'Channel not found' });
+    if (!channel) return res.status(404).json({ message: "Channel not found" });
 
-    if (channel.owner.toString() === req.user._id.toString()) {
-      return res.status(400).json({ message: 'Cannot subscribe to your own channel' });
-    }
+    if (channel.owner.toString() === req.user._id.toString())
+      return res.status(400).json({ message: "Cannot subscribe to yourself" });
 
     const user = await User.findById(req.user._id);
+
     const isSubscribed = user.subscribedChannels.includes(channel._id);
 
     if (isSubscribed) {
       await User.findByIdAndUpdate(req.user._id, { $pull: { subscribedChannels: channel._id } });
       await Channel.findByIdAndUpdate(channel._id, { $pull: { subscribers: req.user._id } });
-      return res.json({ message: 'Unsubscribed successfully' });
+      return res.json({ message: "Unsubscribed" });
     }
 
     await User.findByIdAndUpdate(req.user._id, { $addToSet: { subscribedChannels: channel._id } });
     await Channel.findByIdAndUpdate(channel._id, { $addToSet: { subscribers: req.user._id } });
 
-    res.json({ message: 'Subscribed successfully' });
+    res.json({ message: "Subscribed" });
+
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Channel Search
-router.get('/search', async (req, res) => {
+/* ========================= DELETE VIDEO BY OWNER ========================= */
+router.delete("/video/:vid", authenticate, async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.vid);
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    if (video.uploader.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "Unauthorized" });
+
+    await Video.findByIdAndDelete(req.params.vid);
+    res.json({ message: "Video deleted successfully" });
+
+  } catch {
+    res.status(500).json({ message: "Failed to delete video" });
+  }
+});
+
+/* ========================= SEARCH CHANNELS ========================= */
+router.get("/search", async (req, res) => {
   try {
     const query = req.query.q;
-    if (!query) return res.status(400).json({ message: 'Search query is required' });
+    if (!query) return res.status(400).json({ message: "Search query required" });
 
     const channels = await Channel.find(
       { $text: { $search: query } },
-      { score: { $meta: 'textScore' } }
-    )
-      .sort({ score: { $meta: 'textScore' } })
-      .populate('owner', ['username', 'avatar']);
+      { score: { $meta: "textScore" } }
+    ).sort({ score: { $meta: "textScore" } });
 
     res.json(channels);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+
+  } catch {
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

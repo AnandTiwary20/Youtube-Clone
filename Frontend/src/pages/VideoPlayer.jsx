@@ -1,94 +1,146 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
 import "../styles/VideoPlayer.css";
 
 export default function VideoPlayer() {
   const { id } = useParams();
   const [video, setVideo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [recommended, setRecommended] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     fetchVideo();
+    fetchRecommended();
+    fetchComments();
+    window.scrollTo(0, 0);
   }, [id]);
 
   const fetchVideo = async () => {
     try {
       const res = await API.get(`/videos/${id}`);
       setVideo(res.data);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
+    } catch (e) {
+      console.log("Video load failed");
     }
   };
 
-  if (loading) return <div className="loading">Loading video...</div>;
-  if (!video) return <div className="error">Video not found</div>;
+  const fetchRecommended = async () => {
+    try {
+      const res = await API.get("/videos?limit=25");
+      setRecommended(res.data.videos || []);
+    } catch {}
+  };
+
+  const fetchComments = async () => {
+    try {
+      const res = await API.get(`/comments/${id}`);
+      setComments(res.data);
+    } catch {}
+  };
+
+  /* LIKE VIDEO */
+  const likeVideo = async () => {
+    await API.put(`/videos/like/${id}`);
+    fetchVideo();
+  };
+
+  /* DISLIKE VIDEO */
+  const dislikeVideo = async () => {
+    await API.put(`/videos/dislike/${id}`);
+    fetchVideo();
+  };
+
+  /* POST COMMENT */
+  const postComment = async () => {
+    if (!commentText.trim()) return;
+    try {
+      await API.post(`/comments/${id}`, { text: commentText });
+      setCommentText("");
+      fetchComments();
+    } catch {
+      alert("Please login to comment");
+    }
+  };
+
+  if (!video) return <h2 className="loader">Loading video...</h2>;
 
   return (
-    <div className="video-screen">
+    <div className="video-page">
 
-      {/* ===================== LEFT SECTION ===================== */}
+      {/* ----------- LEFT MAIN PLAYER ----------- */}
       <div className="video-left">
 
-        <video 
-          src={video.videoUrl} 
-          controls 
-          poster={video.thumbnailUrl} 
-          className="video-player"
-        />
+        <video className="video-player" controls autoPlay src={video.videoUrl} poster={video.thumbnailUrl} />
 
         <h2 className="video-title">{video.title}</h2>
 
-        <div className="video-stats">
-          <span>{video.views} views</span>
-          <span>• {new Date(video.createdAt).toLocaleDateString()}</span>
+        <div className="video-info-row">
+          <span>{video.views} views • {new Date(video.createdAt).toLocaleDateString()}</span>
 
-          <div className="actions">
-            <button className="like-btn">👍 {video.likes?.length || 0}</button>
-            <button className="dislike-btn">👎 {video.dislikes?.length || 0}</button>
-            <button className="share-btn">↗ Share</button>
+          <div className="action-buttons">
+            <button onClick={likeVideo}>👍 {video.likes?.length}</button>
+            <button onClick={dislikeVideo}>👎 {video.dislikes?.length}</button>
+            <button>⤴ Share</button>
           </div>
         </div>
 
-        {/* Channel Box */}
-        <div className="channel-card">
-          <img src={video?.channel?.avatar} className="channel-img" />
-          <div className="channel-info">
-            <h3>{video.channel?.channelName}</h3>
-            <p className="sub-count">1.2M subscribers</p>
+        {/* CHANNEL BOX */}
+        <div className="channel-box">
+          <img className="channel-avatar" src={video.channel?.avatar} />
+
+          <div>
+            <h4>{video.channel?.channelName}</h4>
+            <p className="sub-count">{video.uploader?.username}</p>
           </div>
+
           <button className="subscribe-btn">Subscribe</button>
         </div>
 
-        <p className="description">{video.description}</p>
+        <div className="description-box">{video.description}</div>
 
-        {/* Placeholder now – We will build comments next step */}
-        <div className="coming">💬 Comments section coming next →</div>
+        {/* -------- COMMENTS -------- */}
+        <div className="comments-section">
 
+          <h3>Comments ({comments.length})</h3>
+
+          <div className="add-comment">
+            <input
+              placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <button onClick={postComment}>Post</button>
+          </div>
+
+          {comments.map((c) => (
+            <div key={c._id} className="comment-item">
+              <b>{c.user?.username}</b>
+              <p>{c.text}</p>
+              <small>{new Date(c.createdAt).toLocaleDateString()}</small>
+            </div>
+          ))}
+
+        </div>
       </div>
 
-      {/* ===================== RIGHT RECOMMENDED ===================== */}
-      <div className="video-right">
+
+      {/* ----------- RIGHT | RECOMMENDED ---------- */}
+      <div className="recommended-box">
         <h3 className="rec-title">Recommended</h3>
 
-        <div className="rec-item">
-          <img src={video.thumbnailUrl} />
-          <div>
-            <p className="rec-name">{video.title}</p>
-            <span className="rec-channel">{video.channel?.channelName}</span>
-          </div>
-        </div>
+        {recommended.filter(v => v._id !== id).map(v => (
+          <div key={v._id} onClick={() => window.location = `/video/${v._id}`} className="rec-item">
+            <img src={v.thumbnailUrl} />
 
-        <div className="rec-item">
-          <img src={video.thumbnailUrl} />
-          <div>
-            <p className="rec-name">Another Example Video</p>
-            <span className="rec-channel">{video.channel?.channelName}</span>
+            <div className="rec-info">
+              <p className="rec-name">{v.title}</p>
+              <p className="rec-channel">{v.channel?.channelName}</p>
+              <span className="rec-views">{v.views} views</span>
+            </div>
           </div>
-        </div>
-
+        ))}
       </div>
 
     </div>

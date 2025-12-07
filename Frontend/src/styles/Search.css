@@ -1,0 +1,51 @@
+.search-page {
+  padding: 20px 40px;
+}
+
+.search-heading {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.search-heading span {
+  color: #ff0000;
+}
+
+.search-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.search-card {
+  display: flex;
+  gap: 15px;
+  text-decoration: none;
+  color: #111;
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,.08);
+}
+
+.search-card:hover {
+  transform: scale(1.01);
+  transition: .2s;
+}
+
+.thumb {
+  width: 240px;
+  height: 135px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.search-card .info h3 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.search-card .info p {
+  color: #666;
+  margin-top: 5px;
+}
