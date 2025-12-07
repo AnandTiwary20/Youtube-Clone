@@ -2,6 +2,8 @@ import { useState } from "react";
 import API from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../styles/Upload.css";
+import "../styles/AuthClose.css";
+
 
 export default function Upload() {
   const [form, setForm] = useState({
@@ -36,7 +38,11 @@ export default function Upload() {
   };
 
   return (
+
+    
+    
     <div className="upload-container">
+      <div className="auth-close" onClick={() => navigate("/")}>✖</div>
       <h2>Upload Video</h2>
 
       <form className="upload-form" onSubmit={handleSubmit}>

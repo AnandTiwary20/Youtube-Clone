@@ -1,19 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
 import "../styles/VideoPlayer.css";
+import CommentSection from "../pages/CommentSection.jsx"
 
 export default function VideoPlayer() {
   const { id } = useParams();
   const [video, setVideo] = useState(null);
   const [recommended, setRecommended] = useState([]);
-  const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     fetchVideo();
     fetchRecommended();
-    fetchComments();
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -21,7 +19,7 @@ export default function VideoPlayer() {
     try {
       const res = await API.get(`/videos/${id}`);
       setVideo(res.data);
-    } catch (e) {
+    } catch {
       console.log("Video load failed");
     }
   };
@@ -33,34 +31,25 @@ export default function VideoPlayer() {
     } catch {}
   };
 
-  const fetchComments = async () => {
-    try {
-      const res = await API.get(`/comments/${id}`);
-      setComments(res.data);
-    } catch {}
-  };
-
-  /* LIKE VIDEO */
+  /* LIKE */
   const likeVideo = async () => {
     await API.put(`/videos/like/${id}`);
     fetchVideo();
   };
 
-  /* DISLIKE VIDEO */
+  /* DISLIKE */
   const dislikeVideo = async () => {
     await API.put(`/videos/dislike/${id}`);
     fetchVideo();
   };
 
-  /* POST COMMENT */
-  const postComment = async () => {
-    if (!commentText.trim()) return;
+  /* SUBSCRIBE BUTTON ACTION */
+  const subscribeFromVideo = async () => {
     try {
-      await API.post(`/comments/${id}`, { text: commentText });
-      setCommentText("");
-      fetchComments();
+      const res = await API.put(`/channels/subscribe/${video.channel?._id}`);
+      fetchVideo(); // refresh details auto
     } catch {
-      alert("Please login to comment");
+      alert("Login required");
     }
   };
 
@@ -69,7 +58,7 @@ export default function VideoPlayer() {
   return (
     <div className="video-page">
 
-      {/* ----------- LEFT MAIN PLAYER ----------- */}
+      {/* LEFT PLAYER */}
       <div className="video-left">
 
         <video className="video-player" controls autoPlay src={video.videoUrl} poster={video.thumbnailUrl} />
@@ -86,54 +75,41 @@ export default function VideoPlayer() {
           </div>
         </div>
 
-        {/* CHANNEL BOX */}
+        {/* CHANNEL */}
         <div className="channel-box">
           <img className="channel-avatar" src={video.channel?.avatar} />
 
           <div>
-            <h4>{video.channel?.channelName}</h4>
-            <p className="sub-count">{video.uploader?.username}</p>
+            <Link to={`/channel/${video.channel?._id}`}>
+              <h4 className="channel-name">{video.channel?.channelName}</h4>
+            </Link>
+            <p className="sub-count">{video.channel?.subscribers?.length} subscribers</p>
           </div>
 
-          <button className="subscribe-btn">Subscribe</button>
+       <button 
+  className={`subscribe-btn ${video.isSubscribed ? "active" : ""}`} 
+  onClick={subscribeFromVideo}
+>
+  {video.isSubscribed ? "Subscribed" : "Subscribe"}
+</button>
+
         </div>
 
         <div className="description-box">{video.description}</div>
 
-        {/* -------- COMMENTS -------- */}
-        <div className="comments-section">
+       
+        <CommentSection videoId={id} />
 
-          <h3>Comments ({comments.length})</h3>
-
-          <div className="add-comment">
-            <input
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-            <button onClick={postComment}>Post</button>
-          </div>
-
-          {comments.map((c) => (
-            <div key={c._id} className="comment-item">
-              <b>{c.user?.username}</b>
-              <p>{c.text}</p>
-              <small>{new Date(c.createdAt).toLocaleDateString()}</small>
-            </div>
-          ))}
-
-        </div>
       </div>
 
 
-      {/* ----------- RIGHT | RECOMMENDED ---------- */}
+      {/* RIGHT - RECOMMENDED LIST */}
       <div className="recommended-box">
         <h3 className="rec-title">Recommended</h3>
 
         {recommended.filter(v => v._id !== id).map(v => (
           <div key={v._id} onClick={() => window.location = `/video/${v._id}`} className="rec-item">
             <img src={v.thumbnailUrl} />
-
             <div className="rec-info">
               <p className="rec-name">{v.title}</p>
               <p className="rec-channel">{v.channel?.channelName}</p>

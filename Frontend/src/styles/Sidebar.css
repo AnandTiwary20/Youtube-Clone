@@ -33,9 +33,9 @@
 }
 
 .sidebar-title {
-    font-size: 13px;
-    text-transform: uppercase;
-    opacity: .6;
+    font-size: 20px;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 0 22px;
     margin: 8px 0;
 }
@@ -49,4 +49,29 @@
   font-weight:500;
   transition:0.3s;
 
+}
+.divider{
+  border: none;
+  height: 1px;
+  background: #333;          /* subtle line */
+  margin: 10px 0;
+}
+
+.section-title{
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 12px 0 8px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.side-link{
+  padding: 8px 0;
+  cursor:pointer;
+  color:#ddd;
+}
+
+.side-link:hover{
+  background:#272727;
 }

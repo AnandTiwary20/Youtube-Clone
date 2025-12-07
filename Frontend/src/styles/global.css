@@ -132,3 +132,26 @@ button{
   font-size: 12px;
   color: #666;
 }
+.auth-close{
+  position:absolute;
+  top:18px;
+  right:22px;
+  width:32px;
+  height:32px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(8px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:18px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:.2s;
+  color:white;
+  border:1px solid rgba(255,255,255,.25);
+}
+
+.auth-close:hover{
+  transform:scale(1.12);
+  background:rgba(255,0,0,.7);
+}

@@ -1,127 +1,124 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
-import CommentSection from "../components/CommentSection";
-import "../styles/VideoPlayer.css";
+import "../styles/Comments.css";
 
-export default function VideoPlayer() {
-  const { id } = useParams();
+export default function CommentSection({ videoId }) {
+  const [comments, setComments] = useState([]);
+  const [text, setText] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
 
-  const [video, setVideo] = useState(null);
-  const [recommended, setRecommended] = useState([]);
-
+  // Load comments whenever videoId changes
   useEffect(() => {
-    fetchVideo();
-    fetchRecommended();
-    window.scrollTo(0, 0);
-  }, [id]);
+    if (videoId) loadComments();
+  }, [videoId]);
 
-  /* Fetch Selected Video */
-  const fetchVideo = async () => {
+  const loadComments = async () => {
     try {
-      const res = await API.get(`/videos/${id}`);
-      setVideo(res.data);
-    } catch {
-      console.log("Video load failed");
+      const res = await API.get(`/comments/${videoId}`);
+      setComments(res.data || []);
+    } catch (err) {
+      console.error("Failed to load comments", err);
     }
   };
 
-  /* Fetch Recommended Videos */
-  const fetchRecommended = async () => {
+  /* ========== ADD COMMENT ========== */
+  const addComment = async () => {
+    if (!text.trim()) return;
     try {
-      const res = await API.get("/videos?limit=25");
-      setRecommended(res.data.videos || []);
-    } catch {}
+      await API.post(`/comments/${videoId}`, { text });
+      setText("");
+      loadComments();
+    } catch (err) {
+      alert(err.response?.data?.error || "Login required to comment");
+    }
   };
 
-  /* Like Video */
-  const likeVideo = async () => {
-    await API.put(`/videos/like/${id}`);
-    fetchVideo();
+  /* ========== START EDITING COMMENT ========== */
+  const startEdit = (comment) => {
+    setEditingId(comment._id);
+    setEditingText(comment.text);
   };
 
-  /* Dislike Video */
-  const dislikeVideo = async () => {
-    await API.put(`/videos/dislike/${id}`);
-    fetchVideo();
+  /* ========== SAVE EDITED COMMENT ========== */
+  const saveEdit = async () => {
+    if (!editingText.trim()) return;
+    try {
+      await API.put(`/comments/edit/${editingId}`, { text: editingText });
+      setEditingId(null);
+      setEditingText("");
+      loadComments();
+    } catch (err) {
+      alert(err.response?.data?.error || "Error updating comment");
+    }
   };
 
-  if (!video) return <h2 className="loader">Loading video...</h2>;
+  /* ========== CANCEL EDIT ========== */
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingText("");
+  };
+
+  /* ========== DELETE COMMENT ========== */
+  const deleteComment = async (id) => {
+    if (!window.confirm("Delete this comment?")) return;
+    try {
+      await API.delete(`/comments/${id}`);
+      loadComments();
+    } catch (err) {
+      alert(err.response?.data?.error || "Error deleting comment");
+    }
+  };
 
   return (
-    <div className="video-page">
+    <div className="comments-section">
+      <h3>{comments.length} Comments</h3>
 
-      {/* ---------------- LEFT MAIN PLAYER ---------------- */}
-      <div className="video-left">
-
-        {/* Video player */}
-        <video
-          className="video-player"
-          controls
-          autoPlay
-          src={video.videoUrl}
-          poster={video.thumbnailUrl}
+      {/* Add comment box */}
+      <div className="add-comment">
+        <input
+          placeholder="Add a comment..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
-
-        <h2 className="video-title">{video.title}</h2>
-
-        {/* Views + Like/Dislike */}
-        <div className="video-info-row">
-          <span>{video.views} views • {new Date(video.createdAt).toLocaleDateString()}</span>
-
-          <div className="action-buttons">
-            <button onClick={likeVideo}>👍 {video.likes?.length}</button>
-            <button onClick={dislikeVideo}>👎 {video.dislikes?.length}</button>
-            <button>⤴ Share</button>
-          </div>
-        </div>
-
-        {/* Channel Card */}
-        <div className="channel-box">
-          <img className="channel-avatar" src={video.channel?.avatar} alt="channel" />
-
-          <div className="channel-info">
-            <h4>{video.channel?.channelName}</h4>
-            <p className="sub-count">{video.uploader?.username}</p>
-          </div>
-
-          <button className="subscribe-btn">Subscribe</button>
-        </div>
-
-        {/* Description */}
-        <div className="description-box">
-          {video.description || "No Description"}
-        </div>
-
-        {/* Comments Section */}
-        <CommentSection videoId={id} />
+        <button onClick={addComment}>Comment</button>
       </div>
 
+      {/* Comments list */}
+      {comments.map((c) => (
+        <div key={c._id} className="comment-item">
+          <div className="comment-header">
+            <span className="comment-user">{c.user?.username || "User"}</span>
+            <span className="comment-date">
+              {new Date(c.createdAt).toLocaleDateString()}
+              {c.isEdited && " · edited"}
+            </span>
+          </div>
 
-
-      {/* ---------------- RIGHT RECOMMENDED ---------------- */}
-      <div className="recommended-box">
-        <h3 className="rec-title">Recommended</h3>
-
-        {recommended
-          .filter(v => v._id !== id)
-          .map(v => (
-            <div
-              key={v._id}
-              onClick={() => (window.location = `/video/${v._id}`)}
-              className="rec-item"
-            >
-              <img src={v.thumbnailUrl} alt="thumb" />
-
-              <div className="rec-info">
-                <p className="rec-name">{v.title}</p>
-                <p className="rec-channel">{v.channel?.channelName}</p>
-                <small className="rec-views">{v.views} views</small>
+          {/* VIEW MODE */}
+          {editingId !== c._id && (
+            <>
+              <p className="comment-text">{c.text}</p>
+              <div className="comment-actions">
+                <button onClick={() => startEdit(c)}>✏ Edit</button>
+                <button onClick={() => deleteComment(c._id)}>🗑 Delete</button>
               </div>
-            </div>
-        ))}
-      </div>
+            </>
+          )}
 
+          {/* EDIT MODE */}
+          {editingId === c._id && (
+            <div className="edit-box">
+              <input
+                value={editingText}
+                onChange={(e) => setEditingText(e.target.value)}
+              />
+              <button onClick={saveEdit}>Save</button>
+              <button onClick={cancelEdit}>Cancel</button>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

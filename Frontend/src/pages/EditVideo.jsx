@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
 import "../styles/EditVideo.css";
 
@@ -11,69 +11,83 @@ export default function EditVideo() {
     title: "",
     description: "",
     thumbnailUrl: "",
-    tags: "",
+    videoUrl: "",
     category: "",
+    tags: ""
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    loadVideo();
-  }, []);
+    fetchVideo();
+  }, [id]);
 
-  const loadVideo = async () => {
-    const res = await API.get(`/videos/${id}`);
-    setForm({
-      title: res.data.title,
-      description: res.data.description,
-      thumbnailUrl: res.data.thumbnailUrl,
-      tags: res.data.tags?.join(", "),
-      category: res.data.category,
-    });
+  const fetchVideo = async () => {
+    try {
+      const res = await API.get(`/videos/${id}`);
+      setForm({
+        title: res.data.title,
+        description: res.data.description,
+        thumbnailUrl: res.data.thumbnailUrl,
+        videoUrl: res.data.videoUrl,
+        category: res.data.category,
+        tags: res.data.tags?.join(", ") || ""
+      });
+      setLoading(false);
+    } catch {
+      alert("Video not found");
+      navigate("/channel/me");
+    }
   };
 
-  const updateVideo = async () => {
-    await API.put(`/videos/${id}`, {
-      ...form,
-      tags: form.tags.split(",").map((t) => t.trim()),
-    });
-    alert("Video updated successfully");
-    navigate(`/video/${id}`);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const updateVideo = async (e) => {
+    e.preventDefault();
+    try {
+      await API.put(`/videos/${id}`, {
+        ...form,
+        tags: form.tags.split(",").map(t => t.trim())
+      });
+
+      alert("Video updated successfully!");
+      navigate(`/video/${id}`);
+    } catch {
+      alert("Failed to update video");
+    }
+  };
+
+  if (loading) return <h2 className="loader">Loading...</h2>;
 
   return (
     <div className="edit-video-container">
+
       <h2>Edit Video</h2>
 
-      <input 
-        value={form.title} 
-        onChange={(e)=>setForm({...form,title:e.target.value})} 
-        placeholder="Title" 
-      />
+      <form onSubmit={updateVideo} className="edit-video-form">
+        <input type="text" name="title" value={form.title} onChange={handleChange} placeholder="Title" required />
+        
+        <textarea name="description" value={form.description} onChange={handleChange} placeholder="Description" rows="4" />
 
-      <textarea
-        value={form.description}
-        onChange={(e)=>setForm({...form,description:e.target.value})}
-        placeholder="Description"
-      />
+        <input type="text" name="thumbnailUrl" value={form.thumbnailUrl} onChange={handleChange} placeholder="Thumbnail URL" required />
 
-      <input 
-        value={form.thumbnailUrl} 
-        onChange={(e)=>setForm({...form,thumbnailUrl:e.target.value})}
-        placeholder="Thumbnail URL" 
-      />
+        <input type="text" name="videoUrl" value={form.videoUrl} onChange={handleChange} placeholder="Video URL" required />
 
-      <input 
-        value={form.tags} 
-        onChange={(e)=>setForm({...form,tags:e.target.value})}
-        placeholder="Tags (comma separated)" 
-      />
+        <input type="text" name="tags" value={form.tags} onChange={handleChange} placeholder="Tags (comma separated)" />
 
-      <input 
-        value={form.category} 
-        onChange={(e)=>setForm({...form,category:e.target.value})}
-        placeholder="Category" 
-      />
+        <select name="category" value={form.category} onChange={handleChange}>
+          <option>Entertainment</option>
+          <option>Tech</option>
+          <option>Music</option>
+          <option>Education</option>
+          <option>Gaming</option>
+        </select>
 
-      <button onClick={updateVideo}>Update</button>
+        <button className="save-btn">Save Changes</button>
+      </form>
+
     </div>
   );
 }

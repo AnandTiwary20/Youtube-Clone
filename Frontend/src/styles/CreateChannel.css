@@ -6,6 +6,7 @@
   align-items: flex-start;
   background-color: #0f0f0f;
   color: #f1f1f1;
+  position:relative;
 }
 
 .create-channel-card {
