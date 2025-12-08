@@ -1,26 +1,18 @@
-
-
 .app-container {
-  display: flex;
-  background-color: #0f0f0f;
-  color: white;
+    display: flex;
+    width: 100%;
+    height: 100vh;
 }
 
-/* Main content (video grid, channel, upload pages etc) */
+/* MAIN CONTENT SHOULD EXPAND */
 .main-content {
-  margin-left: 240px;        /* space for sidebar */
-  margin-top: 60px;          /* space for navbar */
-  width: calc(100% - 240px);
-  min-height: 100vh;
-  padding: 20px;
-  background-color: #0f0f0f;
-  color: white;
+    flex: 1;
+    margin-left: 240px; /* same as sidebar width */
+    background: #0f0f0f;
+    min-height: 100vh;
 }
 
-/* For responsive layout */
-@media(max-width: 768px){
-  .main-content{
-    margin-left: 70px;
-    width: calc(100% - 70px);
-  }
+/* Remove unwanted padding/margins if exists */
+.main-content > * {
+    width: 100%;
 }

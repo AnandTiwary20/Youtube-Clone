@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
-import "../styles/Comments.css";
+import "../styles/CommentSection.css";
 
 export default function CommentSection({ videoId }) {
   const [comments, setComments] = useState([]);
@@ -87,7 +87,12 @@ export default function CommentSection({ videoId }) {
       {/* Comments list */}
       {comments.map((c) => (
         <div key={c._id} className="comment-item">
+<img className="comment-avatar" 
+   src={c.user?.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
+ />
+
           <div className="comment-header">
+            
             <span className="comment-user">{c.user?.username || "User"}</span>
             <span className="comment-date">
               {new Date(c.createdAt).toLocaleDateString()}

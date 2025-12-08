@@ -1,4 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";       
+import "./styles/Layout.css";    
+
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import CreateChannel from "./pages/CreateChannel.jsx";
@@ -8,38 +11,41 @@ import Register from "./pages/Register";
 import VideoPlayer from "./pages/VideoPlayer";
 import ChannelPage from "./pages/ChannelPage";
 import Upload from "./pages/Upload";
-import "./styles/Layout.css";  
 import EditVideo from "./pages/EditVideo.jsx";
-import { Navigate } from "react-router-dom";
 
+
+
+// ---------------- PROTECTED ROUTE ----------------
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" />;
-
-  
 }
-const [sidebarOpen, setSidebarOpen] = useState(true);
 
-
+// ---------------- APP COMPONENT ----------------
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);   
+
   return (
     <BrowserRouter>
-     <Navbar toggleSidebar={() => setSidebarOpen(prev => !prev)} />
-
+      <Navbar toggleSidebar={() => setSidebarOpen(prev => !prev)} />
 
       <div className="app-container">
-        <Sidebar />
+        <Sidebar isOpen={sidebarOpen} />
 
         <main className="main-content">
           <Routes>
+
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-          < Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
-          <Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
-            <Route path="/channel/:id" element={<ChannelPage />} />
+
+            <Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload/></ProtectedRoute>} />
-            <Route path="/edit-video/:id" element={<EditVideo />} />
+            <Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
+
+            <Route path="/video/:id" element={<VideoPlayer />} />
+            <Route path="/channel/:id" element={<ChannelPage />} />
+            
           </Routes>
         </main>
       </div>

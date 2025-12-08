@@ -1,98 +1,80 @@
+/* ================= SIDEBAR ================= */
 .sidebar {
-    width: 230px;
-    background-color: #121212;
-    height: 100vh;
-    position: fixed;
-    padding: 15px 0;
-    color: white;
-    border-right: 1px solid #222;
-    overflow-y: auto;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 240px;
+  height: calc(100vh - 60px);
+  background: #0f0f0f;
+  color: #fff;
+  padding-top: 12px;
+  overflow-y: auto;
+  border-right: 1px solid #222;
+}
+
+.sidebar-item,
+.Create-channel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 22px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: .25s;
+}
+
+.sidebar-item:hover,
+.Create-channel:hover {
+  background: #202020;
+}
+
+.sidebar-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #bbb;
+  margin: 12px 22px 8px;
+}
+
+.divider {
+  margin: 12px 0;
+  border: 0;
+  border-bottom: 1px solid #222;
 }
 
 .sidebar-section {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
-.sidebar-item {
-    padding: 10px 22px;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    color: #ddd;
-    text-decoration: none;
-    transition: 0.2s;
+/* Hover effect with YouTube color tint */
+.sidebar-item:hover i,
+.Create-channel:hover i {
+  color: #ff0000;
 }
 
-.sidebar-item:hover {
-    background-color: #272727;
-    color: white;
-}
-.sidebar {
-  background:#fff;
-  width: 230px;
-  min-height: 100vh;
-  overflow-x:hidden;
-  transition: width 0.3s;
+/* mobile responsive */
+@media(max-width: 900px){
+  .sidebar {
+    width: 200px;
+  }
 }
 
-.sidebar.collapsed {
-  width: 70px;
+@media(max-width: 700px){
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    transition: .3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
 }
 
-.sidebar .sidebar-item i {
-  margin-right: 10px;
-}
-
-.sidebar.collapsed .sidebar-item span,
-.sidebar.collapsed h4 {
-  display:none;
-}
-
-
-.sidebar-title {
-    font-size: 20px;
-
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    padding: 0 22px;
-    margin: 8px 0;
-}
-
-.Create-channel{
-    background:rgba(102, 44, 44, 0.248);
-  color:white;
-  padding:8px 16px;
-  border-radius:6px;
-  text-decoration:none;
-  font-weight:500;
-  transition:0.3s;
-
-}
-.divider{
-  border: none;
-  height: 1px;
-  background: #333;          /* subtle line */
-  margin: 10px 0;
-}
-
-.section-title{
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  margin: 12px 0 8px;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-}
-
-.side-link{
-  padding: 8px 0;
-  cursor:pointer;
-  color:#ddd;
-}
-
-.side-link:hover{
-  background:#272727;
+/* Scrollbar hidden */
+.sidebar::-webkit-scrollbar {
+  width: 0;
 }
