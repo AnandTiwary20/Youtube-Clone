@@ -15,13 +15,17 @@ import { Navigate } from "react-router-dom";
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" />;
+
+  
 }
+const [sidebarOpen, setSidebarOpen] = useState(true);
 
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+     <Navbar toggleSidebar={() => setSidebarOpen(prev => !prev)} />
+
 
       <div className="app-container">
         <Sidebar />
@@ -31,8 +35,8 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-           < Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
-<Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
+          < Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
+          <Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
             <Route path="/channel/:id" element={<ChannelPage />} />
             <Route path="/upload" element={<ProtectedRoute><Upload/></ProtectedRoute>} />
             <Route path="/edit-video/:id" element={<EditVideo />} />

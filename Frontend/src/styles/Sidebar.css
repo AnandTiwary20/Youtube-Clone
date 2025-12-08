@@ -31,6 +31,27 @@
     background-color: #272727;
     color: white;
 }
+.sidebar {
+  background:#fff;
+  width: 230px;
+  min-height: 100vh;
+  overflow-x:hidden;
+  transition: width 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar .sidebar-item i {
+  margin-right: 10px;
+}
+
+.sidebar.collapsed .sidebar-item span,
+.sidebar.collapsed h4 {
+  display:none;
+}
+
 
 .sidebar-title {
     font-size: 20px;
