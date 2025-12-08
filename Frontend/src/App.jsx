@@ -10,6 +10,13 @@ import ChannelPage from "./pages/ChannelPage";
 import Upload from "./pages/Upload";
 import "./styles/Layout.css";  
 import EditVideo from "./pages/EditVideo.jsx";
+import { Navigate } from "react-router-dom";
+
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+}
+
 
 export default function App() {
   return (
@@ -24,10 +31,10 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/create-channel" element={<CreateChannel />} />
-            <Route path="/video/:id" element={<VideoPlayer />} />
+           < Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
+<Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
             <Route path="/channel/:id" element={<ChannelPage />} />
-            <Route path="/upload" element={<Upload />} />
+            <Route path="/upload" element={<ProtectedRoute><Upload/></ProtectedRoute>} />
             <Route path="/edit-video/:id" element={<EditVideo />} />
           </Routes>
         </main>

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { connectDB, PORT } from "./src/config/db.js";
+import { seedVideos } from "./seed.js";
 
 // Routes
 import authRoutes from "./src/routes/authRoutes.js";
@@ -21,6 +22,10 @@ app.use("/api/videos", videoRoutes);
 app.use("/api/comments", commentRoutes);
 
 // Start Server
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+connectDB().then(async () => {
+  console.log("✔ Database connected");
+
+  await seedVideos(); // will auto insert sample videos if none exist
+
+  app.listen(PORT, () => console.log(` Server running on http://localhost:${PORT}`));
 });

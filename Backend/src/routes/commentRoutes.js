@@ -41,7 +41,9 @@ router.get("/:videoId", async (req, res) => {
 });
 
 /* EDIT COMMENT */
-router.put("/edit/:id", authenticate, async (req, res) => {
+/* EDIT COMMENT */
+router.put("/:id", authenticate, async (req, res) => {
+
   try {
     const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
