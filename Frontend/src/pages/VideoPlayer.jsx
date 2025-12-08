@@ -44,16 +44,19 @@ export default function VideoPlayer() {
   };
 
   /* SUBSCRIBE BUTTON ACTION */
-  const subscribeFromVideo = async () => {
+ const subscribeFromVideo = async () => {
     try {
-      const res = await API.put(`/channels/subscribe/${video.channel?._id}`);
-      fetchVideo(); // refresh details auto
+      await API.put(`/channels/subscribe/${video.channel?._id}`);
+      fetchVideo();
     } catch {
       alert("Login required");
+      navigate("/login");
     }
   };
 
   if (!video) return <h2 className="loader">Loading video...</h2>;
+
+  const isSubscribed = video?.channel?.subscribers?.includes(video.uploader);
 
   return (
     <div className="video-page">
@@ -77,8 +80,9 @@ export default function VideoPlayer() {
 
         {/* CHANNEL */}
         <div className="channel-box">
-          <img className="channel-avatar" src={video.channel?.avatar} />
-
+        <img 
+             className="channel-avatar"
+             src={video.channel?.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} />
           <div>
             <Link to={`/channel/${video.channel?._id}`}>
               <h4 className="channel-name">{video.channel?.channelName}</h4>
@@ -104,18 +108,18 @@ export default function VideoPlayer() {
 
 
       {/* RIGHT - RECOMMENDED LIST */}
-      <div className="recommended-box">
+   <div className="recommended-box">
         <h3 className="rec-title">Recommended</h3>
 
         {recommended.filter(v => v._id !== id).map(v => (
-          <div key={v._id} onClick={() => window.location = `/video/${v._id}`} className="rec-item">
+          <Link key={v._id} to={`/watch/${v._id}`} className="rec-item">
             <img src={v.thumbnailUrl} />
             <div className="rec-info">
               <p className="rec-name">{v.title}</p>
               <p className="rec-channel">{v.channel?.channelName}</p>
               <span className="rec-views">{v.views} views</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

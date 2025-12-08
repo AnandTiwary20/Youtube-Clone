@@ -44,7 +44,7 @@ export default function CommentSection({ videoId }) {
   const saveEdit = async () => {
     if (!editingText.trim()) return;
     try {
-      await API.put(`/comments/edit/${editingId}`, { text: editingText });
+  await API.put(`/comments/${editingId}`, { text: editingText });
       setEditingId(null);
       setEditingText("");
       loadComments();
