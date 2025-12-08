@@ -4,7 +4,7 @@ import "../styles/VideoCard.css";
 export default function VideoCard({ video }) {
   
   return (
-    <Link to={`/watch/${video._id}`} className="video-card">
+    <Link to={`/video/${video._id}`} className="video-card">
 
       {/* Thumbnail */}
       <div className="thumbnail-container">

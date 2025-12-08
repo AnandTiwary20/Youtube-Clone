@@ -8,6 +8,12 @@
   gap: 10px;
   margin-bottom: 20px;
 }
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .add-comment input {
   flex: 1;

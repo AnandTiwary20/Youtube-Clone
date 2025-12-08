@@ -1,58 +1,172 @@
-.video-screen {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 22px;
-  padding: 20px;
-  background: #f8f9fb;
+/* Main Container */
+.video-page {
+  display: flex;
+  padding: 90px 20px 20px 20px; /* space under navbar */
+  gap: 20px;
+  background: #0f0f0f;
+  width: 100%;
+  min-height: 100vh;
+  color: #fff;
 }
 
-/* LEFT */
+/* LEFT SECTION */
 .video-left {
-  background: #fff;
-  padding: 18px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+  flex: 1.6;
 }
 
 .video-player {
   width: 100%;
   border-radius: 10px;
+  background: #000;
+  outline: none;
 }
 
+/* Title */
 .video-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 14px 0 8px;
 }
 
-/* Stats */
-.video-stats {display:flex;align-items:center;gap:15px;color:#606060;font-size:14px;}
-.actions{margin-left:auto;display:flex;gap:12px;}
-.actions button{background:#e7e7e7;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;}
-.actions button:hover{background:#d4d4d4;}
+/* Views + Buttons Row */
+.video-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
 
-/* Channel */
-.channel-card{display:flex;align-items:center;gap:14px;margin:18px 0;padding:12px;background:#fafafa;border-radius:10px;}
-.channel-img{width:48px;height:48px;border-radius:50%;}
-.channel-info h3{font-size:16px;font-weight:700;}
-.sub-count{font-size:12px;color:#666;}
-.subscribe-btn{margin-left:auto;background:#ff0000;color:white;border:none;padding:8px 18px;border-radius:20px;cursor:pointer;}
+/* Action Buttons */
+.action-buttons button {
+  background: #212121;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  margin-left: 8px;
+  transition: .2s;
+}
 
-.description{margin-top:10px;font-size:14px;color:#333;}
+.action-buttons button:hover {
+  background: #3b3b3b;
+}
 
-/* RIGHT */
-.video-right{padding:15px;background:#fff;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
-.rec-title{font-weight:700;margin-bottom:12px;}
-.rec-item{display:flex;gap:12px;margin-bottom:14px;cursor:pointer;}
-.rec-item img{width:140px;height:80px;border-radius:10px;object-fit:cover;}
-.rec-name{font-weight:600;font-size:14px;}
-.rec-channel{font-size:12px;color:#777;}
+/* CHANNEL BOX */
+.channel-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  background: #1c1c1c;
+  padding: 12px;
+  border-radius: 10px;
+}
 
-/* COMMENTS */
-.comments-section{margin-top:30px;}
-.add-comment{display:flex;gap:10px;margin-bottom:15px;}
-.add-comment input{flex:1;padding:8px;border:1px solid #ccc;border-radius:6px;}
-.add-comment button{background:red;color:white;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;}
+.channel-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
-.comment-item{padding:12px 0;border-bottom:1px solid #eee;}
-.comment-actions button{background:none;border:none;color:#c00;cursor:pointer;}
+.channel-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.sub-count {
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Subscribe Button */
+.subscribe-btn {
+  margin-left: auto;
+  background: #cc0000;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: .2s;
+}
+
+.subscribe-btn:hover {
+  opacity: .85;
+}
+
+.subscribe-btn.active {
+  background: #e5e5e5;
+  color: #000;
+}
+
+/* Description box */
+.description-box {
+  background: #1c1c1c;
+  padding: 14px;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* RIGHT SECTION - Recommended videos */
+.recommended-box {
+  width: 370px;
+}
+
+.rec-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.rec-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.rec-item:hover {
+  opacity: .8;
+}
+
+.rec-item img {
+  width: 160px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.rec-info {
+  width: 60%;
+}
+
+.rec-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rec-channel, .rec-views {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .video-page {
+    flex-direction: column;
+  }
+  .recommended-box {
+    width: 100%;
+  }
+}

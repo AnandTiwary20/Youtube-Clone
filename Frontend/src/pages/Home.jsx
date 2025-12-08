@@ -32,10 +32,12 @@ export default function Home() {
 
       <h2 className="section-title">{selected} Videos</h2>
 
-      <div className="video-grid">
-        {videos.length > 0 ? (
-          videos.map(video => <VideoCard key={video._id} video={video} />)
-        ) : (
+  <div className="video-grid">
+  {videos.length > 0 ? (
+    videos.map(video => (
+      <VideoCard key={video._id} video={video} />
+    ))
+  ): (
           <p className="no-video-text">No videos uploaded yet.</p>
         )}
       </div>

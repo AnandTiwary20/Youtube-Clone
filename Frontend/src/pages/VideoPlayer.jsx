@@ -72,8 +72,8 @@ export default function VideoPlayer() {
           <span>{video.views} views • {new Date(video.createdAt).toLocaleDateString()}</span>
 
           <div className="action-buttons">
-            <button onClick={likeVideo}>👍 {video.likes?.length}</button>
-            <button onClick={dislikeVideo}>👎 {video.dislikes?.length}</button>
+            <button onClick={likeVideo}> <i class="bi bi-hand-thumbs-up-fill"></i>{video.likes?.length}</button>
+            <button onClick={dislikeVideo}><i class="bi bi-hand-thumbs-down-fill"></i> {video.dislikes?.length}</button>
             <button>⤴ Share</button>
           </div>
         </div>
