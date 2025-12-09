@@ -3,50 +3,78 @@ import User from "./src/models/User.js";
 import Channel from "./src/models/Channel.js";
 
 export const seedVideos = async () => {
-  const count = await Video.countDocuments();
-  if (count > 0) return console.log("📌 Videos already exist — skip\n");
+  try {
+    // const count = await Video.countDocuments();
+    // if (count > 0) {
+    //   console.log("Videos already exist — skipping seeding");
+    //   return;
+    // }
 
-  // Create test user
-  let user = await User.findOne({ email: "john@gmail.com" });
-  if (!user) {
-    user = await User.create({
-      username: "johnDoe2User",
-      email: "john@gmail.com",
-      password: "123456"
-    });
+    console.log("\n Seeding initial data...\n");
+
+    // 1. Create Seed User
+    let user = await User.findOne({ email: "seeduser@example.com" });
+    if (!user) {
+      user = await User.create({
+        username: "DemoUser",
+        email: "seeduser@example.com",
+        password: "123456",
+        avatar: "https://i.pravatar.cc/150?img=12"
+      });
+      console.log("✔ User Created");
+    }
+
+    // 2. Create Seed Channel
+    let channel = await Channel.findOne({ owner: user._id });
+    if (!channel) {
+      channel = await Channel.create({
+        channelName: "Demo Music Channel",
+        description: "Channel seeded with YouTube music videos",
+        owner: user._id,
+        avatar: "https://i.pravatar.cc/150?img=12",
+        channelBanner: "https://picsum.photos/1300/300?random=2"
+      });
+      console.log("✔ Channel Created");
+    }
+
+    // 3. Your YouTube Videos
+    const demoVideos = [
+      {
+        title: "Tu Hai Kahan (Official Video) – AUR",
+        description: "Hit emotional Urdu song by AUR",
+        thumbnailUrl: "https://i.ytimg.com/vi/8qCVXCFREkQ/maxresdefault.jpg",
+        videoUrl: "https://www.youtube.com/watch?v=8qCVXCFREkQ",
+        views: 120000000,
+        category: "Music",
+        tags: ["aur", "tu hai kahan", "music"]
+      },
+      {
+        title: "INTENSE - PRAY (Official Music Video)",
+        description: "Punjabi track with deep vibe and visuals",
+        thumbnailUrl: "https://i.ytimg.com/vi/m-5ck3BuT1o/maxresdefault.jpg",
+        videoUrl: "https://www.youtube.com/watch?v=m-5ck3BuT1o",
+        views: 55000000,
+        category: "Music",
+        tags: ["pray", "punjabi", "intense"]
+      }
+    ];
+
+    // Insert videos + attach to channel
+    for (const vid of demoVideos) {
+      const video = await Video.create({
+        ...vid,
+        uploader: user._id,
+        channel: channel._id
+      });
+
+      channel.videos.push(video._id);
+    }
+
+    await channel.save();
+
+    console.log(" Seed Completed Successfully — Your Music Videos Added!\n");
+
+  } catch (err) {
+    console.log("Seed Error:", err.message);
   }
-
-  // Create default channel
-  let channel = await Channel.findOne({ channelName: "John Channel" });
-  if (!channel) {
-    channel = await Channel.create({
-      channelName: "John Channel",
-      description: "Auto generated sample channel",
-      owner: user._id,
-      avatar: "https://picsum.photos/200",
-      channelBanner: "https://picsum.photos/1200/300"
-    });
-  }
-
-  const categories = ["Music","Gaming","Tech","Education","Comedy","Sports"];
-
-  // Seed 20 videos
-  const sampleVideos = Array.from({ length: 20 }).map((_, i) => ({
-    title: `Sample Video ${i+1}`,
-    description: "Auto generated video example",
-    youtubeId: "w7ejDZ8SWv8", // YouTube ID (Change if you want different videos)
-    videoUrl: "",     // blank = YouTube will be used
-    thumbnailUrl: `https://picsum.photos/seed/video${i}/400/250`,
-    duration: "10:00",
-    views: Math.floor(Math.random() * 50000),
-    category: categories[Math.floor(Math.random()*categories.length)],
-    uploader: user._id,
-    channel: channel._id,
-    likes: [],
-    dislikes: [],
-    comments: [],
-  }));
-
-  await Video.insertMany(sampleVideos);
-  console.log("🎉 20 sample YouTube videos inserted!");
 };

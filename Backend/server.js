@@ -11,21 +11,34 @@ import commentRoutes from "./src/routes/commentRoutes.js";
 
 const app = express();
 
-// Middleware
+/* ---------------------- MIDDLEWARES ---------------------- */
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));   
 
-// Routes
+/* ---------------------- ROUTES ---------------------- */
 app.use("/api/auth", authRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/comments", commentRoutes);
 
-// Start Server
-connectDB().then(async () => {
+/* ---------------------- BASE ROUTE ---------------------- */
+app.get("/", (req,res)=>{
+  res.json({ status:"API Running", message:"YouTube Clone Backend Up 🚀" });
+});
+
+/* ---------------------- ERROR HANDLER ---------------------- */
+app.use((err, req, res, next)=>{
+  console.error("Server Error:", err);
+  res.status(500).json({ message:"Internal Server Error" });
+});
+
+/* ---------------------- SERVER START ---------------------- */
+connectDB().then(async ()=>{
   console.log("✔ Database connected");
 
-  await seedVideos(); // will auto insert sample videos if none exist
+  await seedVideos(); 
 
-  app.listen(PORT, () => console.log(` Server running on http://localhost:${PORT}`));
+  app.listen(PORT, ()=>{
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
 });
