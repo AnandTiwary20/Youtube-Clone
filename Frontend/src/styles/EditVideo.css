@@ -23,7 +23,7 @@
 }
 
 .save-btn{
-  background:var(--red);
+  color: white;
   padding:10px;
   border-radius:6px;
   cursor:pointer;

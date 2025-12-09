@@ -112,7 +112,8 @@ export default function VideoPlayer() {
         <h3 className="rec-title">Recommended</h3>
 
         {recommended.filter(v => v._id !== id).map(v => (
-          <Link key={v._id} to={`/watch/${v._id}`} className="rec-item">
+          <Link key={v._id} to={`/video/${v._id}`} className="rec-item">
+
             <img src={v.thumbnailUrl} />
             <div className="rec-info">
               <p className="rec-name">{v.title}</p>

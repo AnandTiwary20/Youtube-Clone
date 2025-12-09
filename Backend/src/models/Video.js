@@ -6,6 +6,9 @@ const videoSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+
+  youtubeId: { type: String, default: "" },   
+
   description: {
     type: String,
     default: ''
@@ -65,5 +68,9 @@ const videoSchema = new mongoose.Schema({
 
 // Add a text index for search functionality
 videoSchema.index({ title: 'text', description: 'text', tags: 'text' });
+
+
+
+
 
 export default mongoose.model('Video', videoSchema);

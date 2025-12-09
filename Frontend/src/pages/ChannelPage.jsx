@@ -64,54 +64,66 @@ export default function ChannelPage() {
   if (!channel) return <h2>Channel not found</h2>;
 
   return (
-    <div className="channel-container">
+  <div className="channel-container">
 
-      <div className="channel-banner" 
-        style={{backgroundImage:`url(${channel.channelBanner || 'https://i.imgur.com/TDLz0nH.jpeg'})`}} />
+    {/* ---------- Banner ---------- */}
+    <div
+      className="channel-banner"
+      style={{ backgroundImage:`url(${channel.channelBanner || 'https://i.imgur.com/TDLz0nH.jpeg'})` }}
+    />
 
-      <div className="channel-header">
-        <img src={channel.avatar || "/default-avatar.png"} className="channel-avatar" />
+    {/* ---------- Profile + Buttons ---------- */}
+    <div className="channel-info">
+      <img
+        src={channel.avatar || "/default-avatar.png"}
+        className="channel-avatar"
+      />
 
-        <div>
-          <h1>{channel.channelName}</h1>
-          <p className="subs">{channel?.subscribers?.length} subscribers</p>
-        </div>
-
-        <button className="manage-btn">⚙ Manage</button>
-
-        <button 
-          className={`sub-btn ${isSubscribed ? "active" : ""}`}
-          onClick={handleSubscribe}
-        >
-          {isSubscribed ? "Subscribed" : "Subscribe"}
-        </button>
+      <div className="info-text">
+        <h1>{channel.channelName}</h1>
+        <p>{channel?.subscribers?.length} subscribers • {videos.length} videos</p>
       </div>
 
-      <div className="upload-bar">
-        <Link to="/upload" className="upload-btn">📤 Upload Video</Link>
-      </div>
+      <button className="manage-btn">⚙ Manage</button>
 
-      <h2 className="upload-title">Your Uploads</h2>
+      <button
+        className={`sub-btn ${isSubscribed ? "active" : ""}`}
+        onClick={handleSubscribe}
+      >
+        {isSubscribed ? "Subscribed" : "Subscribe"}
+      </button>
+    </div>
 
-      <div className="channel-video-grid">
-        {videos.length > 0 ? videos.map(v => (
-          <div key={v._id} className="channel-video-card">
+    {/* ---------- Upload section ---------- */}
+    <div className="top-actions">
+      <Link to="/upload" className="upload-link">📤 Upload Video</Link>
+    </div>
 
-            <Link to={`/watch/${v._id}`}>
-              <img src={v.thumbnailUrl} className="thumb" />
-            </Link>
+    <h2 className="section-title">Your Uploads</h2>
 
-            <p className="v-title">{v.title}</p>
-            <p className="v-date">{new Date(v.createdAt).toLocaleDateString()}</p>
+    {/* ---------- Video Grid ---------- */}
+    <div className="video-grid">
+      {videos.length > 0 ? videos.map(v => (
+        <div key={v._id} className="video-card">
+
+          <Link to={`/watch/${v._id}`}>
+            <img src={v.thumbnailUrl} className="thumb" />
+          </Link>
+
+          <div className="video-meta">
+            <p className="video-title">{v.title}</p>
+            <p className="video-date">{new Date(v.createdAt).toLocaleDateString()}</p>
 
             <div className="card-actions">
-              <button onClick={() => navigate(`/edit-video/${v._id}`)}>✏ Edit</button>
-              <button className="delete" onClick={() => deleteVideo(v._id)}>🗑 Delete</button>
+              <button className="edit-btn" onClick={() => navigate(`/edit-video/${v._id}`)}>✏ Edit</button>
+              <button className="delete-btn" onClick={() => deleteVideo(v._id)}>🗑 Delete</button>
             </div>
           </div>
-        )) : <p>No videos uploaded.</p>}
-      </div>
 
+        </div>
+      )) : <p style={{padding:"20px 60px"}}>No videos uploaded.</p>}
     </div>
-  );
+
+  </div>
+);
 }

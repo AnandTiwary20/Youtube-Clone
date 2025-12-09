@@ -1,73 +1,147 @@
+/* ================= CHANNEL PAGE REFINED ================= */
+
 .channel-container{
-  background:var(--bg-main);
-  color:white;
+  background:#0f0f0f;
+  color:#fff;
   min-height:100vh;
-  padding-bottom:40px;
+  padding-bottom:60px;
+  font-family:'Roboto',sans-serif;
 }
 
 .channel-banner{
-  height:220px;
+  height:260px;
   background-size:cover;
   background-position:center;
-  filter:brightness(.8);
+  position:relative;
+}
+.channel-banner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.25);
 }
 
-.channel-header{
+/* -------- Profile Area -------- */
+.channel-info{
   display:flex;
-  align-items:center;
-  gap:18px;
-  padding:25px;
-  background:var(--bg-secondary);
-  border-bottom:1px solid var(--border-color);
+  align-items:flex-end;
+  gap:20px;
+  padding:0 60px;
+  transform:translateY(-50px);
 }
 
 .channel-avatar{
-  width:86px;height:86px;border-radius:50%;
-  border:2px solid #444;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  border:4px solid #fff;
 }
 
-.subs{color:var(--text-secondary);}
+.info-text h1{
+  font-size:28px;
+  font-weight:700;
+}
+.info-text p{color:#aaa;margin-top:4px;}
+
+.manage-btn{
+  background:#272727;
+  border:1px solid #444;
+  padding:6px 12px;
+  border-radius:4px;
+  color:#ddd;
+  margin-left:10px;
+  cursor:pointer;
+}
 
 .sub-btn{
   margin-left:auto;
-  background:var(--red);
+  background:#cc0000;
   border:none;
-  padding:8px 18px;
-  border-radius:20px;
-  font-weight:bold;
+  padding:10px 26px;
+  border-radius:25px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+.sub-btn:hover{background:#a80000;}
+.sub-btn.active{background:#e6e6e6;color:#111;}
+
+/* -------- Upload Video Link + Section Title -------- */
+.top-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 60px;
+  margin-top:-20px;
+}
+.upload-link{
+  color:#58a6ff;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:600;
+}
+.upload-link:hover{text-decoration:underline;}
+
+.section-title{
+  font-size:22px;
+  font-weight:700;
+  margin-top:25px;
+  padding:0 60px;
 }
 
-.sub-btn.active{
-  background:#e3e3e3;
-  color:black;
+/* -------- Video Grid -------- */
+.video-grid{
+  padding:30px 60px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:22px;
 }
 
-.upload-btn{
-  background:var(--red);
-  padding:8px 12px;
-  border-radius:6px;
-  font-weight:bold;
-  color:white;
-}
-
-.channel-video-card{
-  background:var(--bg-secondary);
+.video-card{
+  background:#181818;
   border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,.4);
+  overflow:hidden;
+  transition:.3s;
 }
-.channel-video-card:hover{
-  transform:translateY(-3px);
+.video-card:hover{
+  transform:scale(1.03);
   box-shadow:0 0 15px rgba(0,0,0,.6);
 }
 
-.thumb{height:150px;object-fit:cover;}
-
-.v-title{font-weight:600;margin:10px;}
-
-.v-date{color:var(--text-secondary);margin-left:10px;}
-
-.card-actions button{
-  background:#333;color:white;
+.thumb{
+  width:100%;
+  height:150px;
+  object-fit:cover;
 }
-.card-actions button:hover{background:#444;}
-.card-actions .delete{background:#ff3333;}
+
+.video-meta{
+  padding:12px;
+}
+.video-title{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+.video-date{
+  font-size:13px;
+  color:#9e9e9e;
+  margin-bottom:10px;
+}
+
+/* Buttons for edit/delete */
+.card-actions{
+  display:flex;
+  gap:8px;
+}
+.edit-btn, .delete-btn{
+  flex:1;
+  padding:7px 0;
+  border-radius:6px;
+  font-size:14px;
+  cursor:pointer;
+  border:none;
+}
+.edit-btn{background:#333;}
+.edit-btn:hover{background:#444;}
+.delete-btn{background:#e04444;}
+.delete-btn:hover{background:#c03939;}
