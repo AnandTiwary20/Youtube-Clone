@@ -3,7 +3,7 @@ import User from "../models/User.js";
 import Video from "../models/Video.js";
 import { validationResult } from "express-validator";
 
-/* ======================== CREATE OR UPDATE CHANNEL ======================== */
+// Create or Update Channel
 export const createOrUpdateChannel = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -14,7 +14,7 @@ export const createOrUpdateChannel = async (req, res) => {
   try {
     let channel = await Channel.findOne({ owner: req.user._id });
 
-    // UPDATE
+    // UPDATE The channel if exists
     if (channel) {
       channel.channelName = channelName;
       channel.description = description;
@@ -25,7 +25,7 @@ export const createOrUpdateChannel = async (req, res) => {
       return res.json({ message: "Channel Updated", channel });
     }
 
-    // CREATE
+    // CREATE New Channel
     const newChannel = await Channel.create({
       channelName,
       description,
@@ -41,8 +41,7 @@ export const createOrUpdateChannel = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-/* ======================== GET MY CHANNEL (OWNER PANEL) ======================== */
+// owner channelName description avatar channelBanner
 export const getMyChannel = async (req, res) => {
   try {
     const channel = await Channel.findOne({ owner: req.user._id })
@@ -58,8 +57,7 @@ export const getMyChannel = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-/* ======================== GET CHANNEL + VIDEOS PUBLIC ======================== */
+//get chanel by id and error handling
 export const getChannelById = async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.id)
@@ -76,7 +74,7 @@ export const getChannelById = async (req, res) => {
   }
 };
 
-/* ======================== SUBSCRIBE/UNSUBSCRIBE ======================== */
+// subscriber or unsubscriber to a channel
 export const toggleSubscribe = async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
@@ -107,7 +105,7 @@ export const toggleSubscribe = async (req, res) => {
   }
 };
 
-/* ======================== DELETE VIDEO BY OWNER ======================== */
+//Deleting of video only owner can delete it
 export const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.vid);
@@ -124,7 +122,7 @@ export const deleteVideo = async (req, res) => {
   }
 };
 
-/* ======================== SEARCH CHANNELS ======================== */
+//search channels by name or description
 export const searchChannels = async (req, res) => {
   try {
     const query = req.query.q;

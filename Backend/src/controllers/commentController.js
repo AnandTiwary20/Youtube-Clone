@@ -1,7 +1,7 @@
 import Comment from "../models/Comment.js";
 import Video from "../models/Video.js";
 
-/* ========================= CREATE COMMENT ========================= */
+//comment creation logic
 export const createComment = async (req, res) => {
   try {
     const { text } = req.body;
@@ -26,7 +26,7 @@ export const createComment = async (req, res) => {
   }
 };
 
-/* ========================= GET COMMENTS ========================= */
+//get comments for a video
 export const getComments = async (req, res) => {
   try {
     const videoId = req.params.videoId;
@@ -42,7 +42,7 @@ export const getComments = async (req, res) => {
   }
 };
 
-/* ========================= EDIT COMMENT ========================= */
+//edit comment only available to owner
 export const updateComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);
@@ -62,7 +62,7 @@ export const updateComment = async (req, res) => {
   }
 };
 
-/* ========================= DELETE COMMENT ========================= */
+//Delete comment only by logged in user who is the owner
 export const deleteComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);

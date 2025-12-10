@@ -2,7 +2,7 @@ import Video from "../models/Video.js";
 import Channel from "../models/Channel.js";
 import { validationResult } from "express-validator";
 
-/* ======================== UPLOAD VIDEO ======================== */
+//Upload video to a channel logic 
 export const uploadVideo = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -38,7 +38,7 @@ export const uploadVideo = async (req, res) => {
   }
 };
 
-/* ======================== GET ALL VIDEOS (Home Page) ======================== */
+//get all the videos with pagination
 export const getAllVideos = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
@@ -66,7 +66,7 @@ export const getAllVideos = async (req, res) => {
   }
 };
 
-/* ======================== CATEGORY FILTER ======================== */
+//Filter videos by category
 export const getByCategory = async (req, res) => {
   try {
     const videos = await Video.find({ category: req.params.type, visibility: 'public' })
@@ -80,7 +80,7 @@ export const getByCategory = async (req, res) => {
   }
 };
 
-/* ======================== GET SINGLE VIDEO ======================== */
+//get a single video 
 export const getVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
@@ -101,7 +101,7 @@ export const getVideo = async (req, res) => {
   }
 };
 
-/* ======================== LIKE VIDEO ======================== */
+//Like video logic is here 
 export const likeVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -126,7 +126,7 @@ export const likeVideo = async (req, res) => {
   }
 };
 
-/* ======================== DISLIKE VIDEO ======================== */
+//Dislike video logic is here
 export const dislikeVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -151,7 +151,7 @@ export const dislikeVideo = async (req, res) => {
   }
 };
 
-/* ======================== UPDATE VIDEO ======================== */
+//update video details by the owner
 export const updateVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -175,7 +175,7 @@ export const updateVideo = async (req, res) => {
   }
 };
 
-/* ======================== GET VIDEOS BY CHANNEL ======================== */
+//get videos by channel id 
 export const getByChannel = async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.channelId);
@@ -192,7 +192,7 @@ export const getByChannel = async (req, res) => {
   }
 };
 
-/* ======================== SEARCH VIDEOS ======================== */
+//Search video by title 
 export const searchVideos = async (req, res) => {
   try {
     const query = req.query.q;
