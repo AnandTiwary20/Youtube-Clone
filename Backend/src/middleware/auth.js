@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
-// 🔐 Auth Middleware
+//  Auth Middleware
 export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -31,13 +31,13 @@ export const authenticate = async (req, res, next) => {
   }
 };
 
-// 🛡 Admin check
+// Admin check
 export const isAdmin = (req, res, next) => {
   if (req.user?.role === "admin") return next();
   return res.status(403).json({ message: "Admin access required" });
 };
 
-// 🏠 Owner check
+
 export const isOwner = (Model, ownerField) => async (req, res, next) => {
   try {
     const resource = await Model.findById(req.params.id);
