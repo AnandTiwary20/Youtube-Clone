@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import API from "../utils/axiosInstance";
+import API from "../utils/axiosInstance";       
 import "../styles/EditVideo.css";
-
+// EditVideo component to allow users to edit their uploaded videos
+// APi calls to fetch and update video details
 export default function EditVideo() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function EditVideo() {
   useEffect(() => {
     fetchVideo();
   }, [id]);
-
+// Fetch video details to pre-fill the form
   const fetchVideo = async () => {
     try {
       const res = await API.get(`/videos/${id}`);
@@ -39,11 +40,12 @@ export default function EditVideo() {
       navigate("/channel/me");
     }
   };
+  // Handle form input changes
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+// update video details 
   const updateVideo = async (e) => {
     e.preventDefault();
     try {
@@ -61,9 +63,9 @@ export default function EditVideo() {
    alert(err.response?.data?.message || "Update failed");
 }
   };
-
+// loading state
   if (loading) return <h2 className="loader">Loading...</h2>;
-
+//  Render the edit video form
   return (
     <div className="edit-video-container">
 

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/authSlice";
 import "../styles/Register.css";
 import "../styles/AuthClose.css";
-
+// Register component for user registration
 export default function Register() {
   const [formData, setFormData] = useState({
     username: "",
@@ -13,6 +13,7 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+  // state management
 
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
@@ -50,6 +51,7 @@ try {
   setError(err.response?.data?.message || "Registration Failed");
 }
 setLoading(false);
+// handle form submission for registration
 
   };
 
@@ -61,7 +63,7 @@ setLoading(false);
       <div className="register-box">
         
         <h2 className="title">Create Your YouTube Account</h2>
-        <p className="subtitle">Watch, Upload, Share videos instantly</p>
+        <p className="subtitle">Watch, Upload, Share</p>
 
         {error && <p className="error-box">{error}</p>}
 
@@ -72,7 +74,7 @@ setLoading(false);
             <input 
               type="text" 
               name="username"
-              placeholder="Enter username"
+              placeholder="Enter username please "
               value={formData.username} 
               onChange={handleChange}
               required 
@@ -84,7 +86,7 @@ setLoading(false);
             <input 
               type="email" 
               name="email"
-              placeholder="Enter email"
+              placeholder="Enter email please"
               value={formData.email} 
               onChange={handleChange}
               required
@@ -127,7 +129,8 @@ setLoading(false);
             {loading ? "Creating Account..." : "Register"}
           </button>
 
-        </form>
+        </form> 
+        
 
         <p className="login-link">
           Already have an account? <span onClick={() => navigate("/login")}>Login</span>

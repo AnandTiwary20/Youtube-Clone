@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../utils/axiosInstance";
 import "../styles/ChannelPage.css";
+// ChannelPage component to display channel details and videos
 
 export default function ChannelPage() {
   const { id } = useParams();
@@ -11,10 +12,12 @@ export default function ChannelPage() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  //  useEffect to fetch channel and videos on component mount or id change
+
   useEffect(() => {
     fetchChannel();
     fetchVideos();
-    window.scrollTo(0,0);
+    window.scrollTo(0,0);  // Scroll to top on channel change
   }, [id]);
 
   const fetchChannel = async () => {
@@ -25,6 +28,7 @@ export default function ChannelPage() {
       alert("Channel not found");
     }
   };
+  //  Fetch videos uploaded by the channel
 
   const fetchVideos = async () => {
     try {
@@ -34,6 +38,7 @@ export default function ChannelPage() {
       setLoading(false);
     }
   };
+  // Check if the user is subscribed to the channel
 
   const isSubscribed = channel?.subscribers?.includes(channel?.owner?._id);
 
@@ -46,10 +51,10 @@ export default function ChannelPage() {
         isSubscribed: res.data.subscribed
       }));
     } catch {
-      alert("Login required");
+      alert("Login required");   //login is required to subscribe 
     }
   };
-
+//  delete video function for channel owner
   const deleteVideo = async (videoId) => {
     if (!window.confirm("Delete this video?")) return;
     try {
@@ -85,7 +90,7 @@ export default function ChannelPage() {
       </div>
 
       <button className="manage-btn">⚙ Manage</button>
-
+ 
       <button
         className={`sub-btn ${isSubscribed ? "active" : ""}`}
         onClick={handleSubscribe}

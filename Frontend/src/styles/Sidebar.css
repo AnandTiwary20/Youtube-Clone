@@ -78,3 +78,22 @@
 .sidebar::-webkit-scrollbar {
   width: 0;
 }
+
+.sidebar.collapsed {
+  width: 70px;              /* collapsed size */
+  overflow: hidden;
+  transition: .3s ease;
+}
+
+/* Hide text when collapsed */
+.sidebar.collapsed .sidebar-item span,
+.sidebar.collapsed .sidebar-title,
+.sidebar.collapsed h4 {
+  display: none;
+}
+
+/* Icons center align when collapsed */
+.sidebar.collapsed .sidebar-item {
+  justify-content: center;
+  padding: 12px 0;
+}

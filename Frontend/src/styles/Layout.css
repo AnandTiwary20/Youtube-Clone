@@ -16,3 +16,19 @@
 .main-content > * {
     width: 100%;
 }
+
+.video-page {
+  display: flex;
+  gap: 20px;
+  background: #0f0f0f;        
+  color: white;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* LEFT PLAYER SECTION */
+.video-left {
+  flex: 3;
+  background: #0f0f0f;         
+}
+

@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/axiosInstance";
 import "../styles/CreateChannel.css";
+import "../styles/AuthClose.css";
+
+// CreateChannel component for users to create a new channel
+
 
 export default function CreateChannel() {
   const [form, setForm] = useState({
@@ -13,12 +17,15 @@ export default function CreateChannel() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
+  // Handle form input changes
+
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
+  // handle form submission to create channel
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +56,7 @@ export default function CreateChannel() {
       setLoading(false);
     }
   };
+  // Render the create channel form
 
   return (
     <div className="create-channel-page">
@@ -68,7 +76,7 @@ export default function CreateChannel() {
               name="channelName"
               value={form.channelName}
               onChange={handleChange}
-              placeholder="My Awesome Channel"
+              placeholder="My Awesome Channel"    //placeholder text
               required
             />
           </div>
@@ -83,7 +91,7 @@ export default function CreateChannel() {
               placeholder="Describe what your channel is about..."
             />
           </div>
-
+                {/* banner image */}
           <div className="form-group">
             <label>Banner Image URL (optional)</label>
             <input
@@ -94,7 +102,7 @@ export default function CreateChannel() {
               placeholder="https://example.com/banner.png"
             />
           </div>
-
+    {/* submit button */}
           <button type="submit" disabled={loading} className="primary-btn">
             {loading ? "Creating..." : "Create Channel"}
           </button>

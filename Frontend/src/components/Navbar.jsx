@@ -19,8 +19,7 @@ export default function Navbar({ toggleSidebar }) {
 
   return (
     <header className="navbar">
-
-      {/* Hamburger for Sidebar Toggle */}
+      {/* Hamburger Menu */}
       <i className="bi bi-list hamburger" onClick={toggleSidebar}></i>
 
       {/* Logo */}

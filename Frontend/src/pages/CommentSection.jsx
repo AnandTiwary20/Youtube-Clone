@@ -22,7 +22,7 @@ export default function CommentSection({ videoId }) {
     }
   };
 
-  /* ========== ADD COMMENT ========== */
+//add comments async function
   const addComment = async () => {
     if (!text.trim()) return;
     try {
@@ -34,17 +34,17 @@ export default function CommentSection({ videoId }) {
     }
   };
 
-  /* ========== START EDITING COMMENT ========== */
+// start edit function for comments
   const startEdit = (comment) => {
     setEditingId(comment._id);
     setEditingText(comment.text);
   };
 
-  /* ========== SAVE EDITED COMMENT ========== */
+//save edit function for comments
   const saveEdit = async () => {
     if (!editingText.trim()) return;
     try {
-  await API.put(`/comments/${editingId}`, { text: editingText });
+  await API.put(`/comments/${editingId}`, { text: editingText });    // Update comment API call
       setEditingId(null);
       setEditingText("");
       loadComments();
@@ -53,13 +53,13 @@ export default function CommentSection({ videoId }) {
     }
   };
 
-  /* ========== CANCEL EDIT ========== */
+// edit cancel functioon for comments
   const cancelEdit = () => {
     setEditingId(null);
     setEditingText("");
   };
 
-  /* ========== DELETE COMMENT ========== */
+//  delete commet function for comments
   const deleteComment = async (id) => {
     if (!window.confirm("Delete this comment?")) return;
     try {

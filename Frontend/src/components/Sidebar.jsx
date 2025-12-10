@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import "../styles/Sidebar.css";
-
+// sidebar component for navigation links
 export default function Sidebar({ isOpen }) {
   return (
+    // sidebar open and collapsed state and logic 
     <aside className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
 
       <div className="sidebar-section">

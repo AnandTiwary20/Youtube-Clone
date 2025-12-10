@@ -1,3 +1,5 @@
+/*  CHANNEL CREATION CSS IS HERE  */
+
 .create-channel-page {
   display:flex;
   justify-content:center;
@@ -16,6 +18,7 @@
   box-shadow:0 0 20px rgba(0,0,0,.4);
   animation:fadeIn .3s ease;
 }
+/* THE ZOOM IN AND ZOOM OUT */
 
 @keyframes fadeIn {
   from { opacity:0; transform:translateY(20px); }

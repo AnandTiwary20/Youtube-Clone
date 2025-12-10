@@ -1,4 +1,4 @@
-/* 
+
 :root {
   --bg-main: #0f0f0f;
   --bg-secondary: #181818;
@@ -26,4 +26,8 @@ input, textarea, select {
 input::placeholder,
 textarea::placeholder {
   color: var(--text-secondary);
-} */
+}
+
+html, body, #root {
+  background: #0f0f0f !important;
+}

@@ -33,19 +33,19 @@ export default function VideoPlayer() {
     } catch {}
   };
 
-  // LIKE
+  // LIKE the video
   const likeVideo = async () => {
     await API.put(`/videos/like/${id}`);
     fetchVideo();
   };
 
-  // DISLIKE
+  // DISLIKE the video
   const dislikeVideo = async () => {
     await API.put(`/videos/dislike/${id}`);
     fetchVideo();
   };
 
-  // SUBSCRIBE
+  // SUBSCRIBE the channel but login is required to subscribe
   const subscribeFromVideo = async () => {
     try {
       await API.put(`/channels/subscribe/${video.channel?._id}`);

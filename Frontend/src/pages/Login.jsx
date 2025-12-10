@@ -6,6 +6,8 @@ import { loginSuccess } from "../store/authSlice";
 import "../styles/Login.css";   // 
 import "../styles/AuthClose.css";
 
+// Login component for user authentication
+
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -13,7 +15,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+// statemanagement 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };

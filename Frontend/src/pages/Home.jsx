@@ -3,10 +3,13 @@ import API from "../utils/axiosInstance";
 import FilterBar from "../components/FilterBar";
 import VideoCard from "../components/VideoCard";
 import "../styles/Home.css";
+// Home component to display videos with filtering options
 
 export default function Home() {
   const [videos, setVideos] = useState([]);
   const [selected, setSelected] = useState("All");
+  // Fetch videos when selected category changes
+  // useffect hook to load videos based on selected category
 
   useEffect(() => {
     fetchVideos();
@@ -23,6 +26,7 @@ export default function Home() {
       console.log("Error fetching videos:", err);
     }
   };
+  // Render the Home page with FilterBar and VideoCards
 
   return (
     <div className="home-container">
@@ -34,7 +38,7 @@ export default function Home() {
 
   <div className="video-grid">
   {videos.length > 0 ? (
-    videos.map(video => (
+    videos.map(video => (                                   
       <VideoCard key={video._id} video={video} />
     ))
   ): (

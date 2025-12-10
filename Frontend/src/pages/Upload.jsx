@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Upload.css";
 import "../styles/AuthClose.css";
 
+// Upload component for users to upload new videos
+
 export default function Upload() {
   const [form, setForm] = useState({
     title: "",
@@ -38,7 +40,7 @@ export default function Upload() {
       alert(err.response?.data?.message || "Upload failed");
     }
   };
-
+// kindly follow strictly the form structure below
   return (
     <div className="upload-container">
       <div className="auth-close" onClick={() => navigate("/")}>✖</div>
@@ -46,7 +48,7 @@ export default function Upload() {
 
       <form className="upload-form" onSubmit={handleSubmit}>
         <input type="text" name="title" placeholder="Video Title" required onChange={handleChange} />
-        <textarea name="description" placeholder="Description..." onChange={handleChange}></textarea>
+        <textarea name="description" placeholder="Description.." onChange={handleChange}></textarea>
 
         <input type="text" name="videoUrl" placeholder="Video URL (mp4 or link)" required onChange={handleChange} />
         <input type="text" name="thumbnailUrl" placeholder="Thumbnail Image URL" required onChange={handleChange} />

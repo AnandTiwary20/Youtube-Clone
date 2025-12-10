@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import API from "../utils/axiosInstance";
 import "../styles/Search.css";
+// Search component to display video search results based on query 
 
 export default function Search() {
   const query = new URLSearchParams(useLocation().search).get("q");
@@ -10,7 +11,7 @@ export default function Search() {
   useEffect(() => {
     if (query) fetchResults();
   }, [query]);
-
+// Fetch search results from the API 
   const fetchResults = async () => {
     try {
       const res = await API.get(`/videos/search?q=${query}`);
