@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../utils/axiosInstance";
+import API from "../utils/axiosInstance.js";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/authSlice";
 import "../styles/Register.css";
@@ -32,20 +32,25 @@ export default function Register() {
     if (formData.password !== formData.confirmPassword)
       return setError("Passwords do not match ❌");
 
-    try {
-      setLoading(true);
-      const res = await API.post("/auth/register", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
+try {
+  setLoading(true);
+  const res = await API.post("/auth/register", {
+    username: formData.username,
+    email: formData.email,
+    password: formData.password,
+  });
 
-      dispatch(loginSuccess(res.data));
-      navigate("/");
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration Failed");
-    }
-    setLoading(false);
+  dispatch(loginSuccess({
+    token: res.data.token,
+    user: res.data.user
+  }));
+
+  navigate("/");
+} catch (err) {
+  setError(err.response?.data?.message || "Registration Failed");
+}
+setLoading(false);
+
   };
 
   return (
@@ -92,7 +97,7 @@ export default function Register() {
               <input
                 type={showPass ? "text" : "password"}
                 name="password"
-                placeholder="Enter password"
+                placeholder="Enter password (min. 6 characters)"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -101,7 +106,7 @@ export default function Register() {
                 onClick={() => setShowPass(!showPass)} 
                 className="toggle-pass"
               >
-                {showPass ? "🙈" : "👁"}
+                {showPass ? "" : "👁"}
               </span>
             </div>
           </div>
@@ -111,7 +116,7 @@ export default function Register() {
             <input 
               type="password" 
               name="confirmPassword"
-              placeholder="Re-enter password"
+              placeholder="Re-enter password min. 6 characters"
               value={formData.confirmPassword}
               onChange={handleChange}
               required

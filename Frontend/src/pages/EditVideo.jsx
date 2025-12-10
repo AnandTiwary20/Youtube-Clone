@@ -53,10 +53,13 @@ export default function EditVideo() {
       });
 
       alert("Video updated successfully!");
-      navigate(`/video/${id}`);
-    } catch {
-      alert("Failed to update video");
-    }
+      navigate(`/watch/${id}`);
+  
+    } catch (err) {
+   if (err.response?.status === 403) 
+     return alert("You can only edit your own videos!");
+   alert(err.response?.data?.message || "Update failed");
+}
   };
 
   if (loading) return <h2 className="loader">Loading...</h2>;

@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import API from "../utils/axiosInstance";          
 import { useDispatch } from "react-redux";        
 import { loginSuccess } from "../store/authSlice"; 
-import "../styles/Login.css";   // ⭐ Important new CSS file we'll create
+import "../styles/Login.css";   // 
+import "../styles/AuthClose.css";
+
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -17,18 +19,24 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await API.post("/auth/login", formData);
-      dispatch(loginSuccess(res.data));
-      navigate("/");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
-    }
-    setLoading(false);
-  };
+  e.preventDefault();
+  setLoading(true);
 
+  try {
+    const res = await API.post("/auth/login", formData);
+
+    // Save token + user
+    dispatch(loginSuccess({
+      token: res.data.token,
+      user: res.data.user
+    }));
+
+    navigate("/");
+  } catch (err) {
+    alert(err.response?.data?.message || "Login failed");
+  }
+  setLoading(false);
+};
   return (
     <div className="login-page">
         <div className="auth-close" onClick={() => navigate("/")}>✖</div>

@@ -29,7 +29,8 @@
 }
 
 .upload-btn {
-  background:var(--red);
+  background:red;
+  color:white;
   border:none;
   padding:10px;
   border-radius:8px;

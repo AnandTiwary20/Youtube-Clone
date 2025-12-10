@@ -4,11 +4,11 @@ import Channel from "./src/models/Channel.js";
 
 export const seedVideos = async () => {
   try {
-    // const count = await Video.countDocuments();
-    // if (count > 0) {
-    //   console.log("Videos already exist — skipping seeding");
-    //   return;
-    // }
+    const count = await Video.countDocuments();
+    if (count > 0) {
+      console.log("Videos already exist — skipping seeding");
+      return;
+    }
 
     console.log("\n Seeding initial data...\n");
 

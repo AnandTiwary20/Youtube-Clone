@@ -53,7 +53,7 @@ export default function ChannelPage() {
   const deleteVideo = async (videoId) => {
     if (!window.confirm("Delete this video?")) return;
     try {
-      await API.delete(`/videos/${videoId}`);
+       await API.delete(`/channels/video/${videoId}`);
       setVideos(videos.filter(v => v._id !== videoId));
     } catch {
       alert("Delete failed");
