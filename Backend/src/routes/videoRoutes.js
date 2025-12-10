@@ -2,6 +2,8 @@ import express from 'express';
 import { authenticate } from '../middleware/auth.js';
 import { check } from 'express-validator';
 
+//controller imports
+
 import {
   uploadVideo,
   getAllVideos,
@@ -14,7 +16,11 @@ import {
   searchVideos
 } from '../controllers/videoController.js';
 
+// Video routes
+
 const router = express.Router();
+
+// upload video to a channel
 
 router.post("/upload", [
   authenticate,
@@ -23,6 +29,7 @@ router.post("/upload", [
   check("thumbnailUrl").notEmpty()
 ], uploadVideo);
 
+//  get all videos
 router.get("/", getAllVideos);
 router.get("/category/:type", getByCategory);
 router.get("/channel/:channelId", getByChannel);

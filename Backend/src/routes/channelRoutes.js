@@ -1,6 +1,8 @@
 import express from "express";
 import { authenticate } from "../middleware/auth.js";
 import { check } from "express-validator";
+//controller imports
+
 
 import {
   createOrUpdateChannel,
@@ -13,6 +15,8 @@ import {
 
 const router = express.Router();
 
+// Routes for channel operations
+
 router.post(
   "/",
   [
@@ -22,6 +26,8 @@ router.post(
   ],
   createOrUpdateChannel
 );
+
+//get my channel
 
 router.get("/me", authenticate, getMyChannel);
 router.get("/search", searchChannels);
