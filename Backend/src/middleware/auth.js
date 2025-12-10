@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";       //JWT TOKEN VERIFICATION
 import User from "../models/User.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";  //A default secret key
 
-//  Auth Middleware
+//  Auth Middleware logic is here
 export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -31,7 +31,8 @@ export const authenticate = async (req, res, next) => {
   }
 };
 
-// Admin check
+// Admin check is here where the admin can acces only certain routes 
+
 export const isAdmin = (req, res, next) => {
   if (req.user?.role === "admin") return next();
   return res.status(403).json({ message: "Admin access required" });

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+//schema for video model everything is required except description and tags
+
 const videoSchema = new mongoose.Schema({
   title: {
     type: String,
