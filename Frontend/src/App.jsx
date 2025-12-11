@@ -12,6 +12,10 @@ import VideoPlayer from "./pages/VideoPlayer";
 import ChannelPage from "./pages/ChannelPage";
 import Upload from "./pages/Upload";
 import EditVideo from "./pages/EditVideo.jsx";
+import History from "./pages/History";
+import LikedVideos from "./pages/LikedVideos.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
+import Shorts from "./pages/Shorts.jsx";
 
 
 
@@ -38,13 +42,16 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-
+            <Route path="/history" element={<History />} />
+             <Route path="/liked" element={<LikedVideos />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
             <Route path="/create-channel" element={<ProtectedRoute><CreateChannel/></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload/></ProtectedRoute>} />
             <Route path="/edit-video/:id" element={<ProtectedRoute><EditVideo/></ProtectedRoute>} />
               <Route path="/search" element={<Search />} />
             <Route path="/video/:id" element={<VideoPlayer />} />
             <Route path="/channel/:id" element={<ChannelPage />} />
+            <Route path="/shorts" element={<Shorts />} />
             
           </Routes>
         </main>
